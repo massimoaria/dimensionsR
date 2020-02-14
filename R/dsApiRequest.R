@@ -1,4 +1,5 @@
 #' Gather bibliographic records using Digital Science Dimensions API
+#' 
 #' It gathers bibliographic records from Digigtal Science Dimensions.
 #' The function \code{dsApiRequest} queries Dimensions using a DSL query formulated through the function \code{dsQueryBuild}.
 #'
@@ -10,6 +11,7 @@
 #' @return a list cointaining bibliographic data downloaded from Dimenbsions.
 #'
 #' For more extensive information about dimensions API, please see: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
+#' For more extensive information about dimensions API, please see: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
 #'
 #' @examples
 #'
@@ -17,6 +19,10 @@
 #' # query <- dsQueryBuild(item = "publications", words = "bibliometric*", type = "article", categories="management", start_year=1980,end_year = 2020)
 #' # D <- dsApiRequest(token = token, query = query, limit = 50000)
 #'
+#' @seealso \code{\link{dsQueryBuild}}
+#' @seealso \code{\link{dsAuth}}
+#' @seealso \code{\link{dsApi2df}}
+#' 
 #' @export
 
 dsApiRequest <- function(token, query, limit = 50000, verbose = FALSE){

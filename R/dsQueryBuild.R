@@ -1,27 +1,29 @@
-#' Generate a DSL query froma set of parameters
+#' Generate a DSL query from a set of parameters
 #' It generates a valid query, written following the Dimensions Search Language (DSL), from a set of search parameters.
 #'
-#' @param item is a character. It indicates the sub-database to query ("publications", "grants", "patents", "clinical_trias").
+#' @param item is a character. It indicates the sub-database to query ("publications", "grants", "patents", "clinical_trials").
 #' @param words is a character. It contains the search terms.
 #' @param full.search is logical. If TRUE, full-text search finds all instances of a term (keyword) in a document, or group of documents. If False, the search finds all instances in titles and abstracts only.
+#' @param type is a character. It indicates the document type to include in the search. Default is \code{type = "article"}.
+#' @param categories is a character. It indicates the research categories to include in the search. If empty \code{categories = ""}, all categories will be included in the search.
+#' @param start_year is integer. It indicate the starting publication year of the search timespan.
+#' @param end_year is integer. It indicate the ending publication year of the search timespan.
 #'
-#' @param query is a character. It contains a search query formulated using the DSL API language. A query can be automatically generated using the function \code{dsQueryBuild}.
-#' @param limit is numeric. It indicates the max numebr of records to download. limit cannot be higher than 50.000 (as stated by Dimensions rules).
-#' @param verbose is logical.
+#' @return a character containing the query in DSL format.
 #'
-#' @return a list cointaining bibliographic data downloaded from Dimenbsions.
-#'
-#' For more extensive information about dimensions API, please see: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
+#' For more extensive information about Dimensions Search Language (DSL), please see: \href{https://docs.dimensions.ai/dsl/}{https://docs.dimensions.ai/dsl/}
 #'
 #' @examples
 #'
-#' # token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
-#' # query <- dsQueryBuild(item = "publications", words = "bibliometric*", type = "article", categories="management", start_year=1980,end_year = 2020)
-#' # D <- dsApiRequest(token = token, query = query, limit = 50000)
+#' query <- dsQueryBuild(item = "publications", words = "bibliometric*", type = "article", categories="management", start_year=1980,end_year = 2020)
+#' 
+#' @seealso \code{\link{dsApiRequest}}
+#' @seealso \code{\link{dsAuth}}
+#' @seealso \code{\link{dsApi2df}}
 #'
 #' @export
 #'
-dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.search=FALSE, type = "article", categories = "management", start_year = 1900, end_year=NULL){
+dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.search=FALSE, type = "article", categories = "", start_year =NULL, end_year=NULL){
 
   # item
   # item = c("publications", "grants", "patents", "clinical trials")
@@ -58,8 +60,10 @@ dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.se
 
 
   # by years
+  if (is.null(start_year))
+    start_year <-  "1900"
   if (is.null(end_year))
-    end_year = substr(Sys.Date(), 1, 4)
+    end_year <-  substr(Sys.Date(), 1, 4)
 
   filter_period <- paste('year in [', start_year, ':', end_year, ']')
 

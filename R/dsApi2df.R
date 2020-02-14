@@ -1,3 +1,25 @@
+#' Convert data in json dimensions structure to a dataframe
+#' 
+#' It converts dimensions data downloaded using DSL API into a data frame
+#' 
+#' @param P is a list in json dimensions structure downloaded using the function \code{dsApiRequest}.
+#' 
+#' @return a bibliographic dataframe.
+#'
+#' For more extensive information about dimensions API, please see: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
+#'
+#' @examples
+#'
+#' # token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+#' # query <- dsQueryBuild(item = "publications", words = "bibliometric*", type = "article", categories="management", start_year=1980,end_year = 2020)
+#' # D <- dsApiRequest(token = token, query = query, limit = 50000)
+#' # M <- dsApi2df(D)
+#'
+#' @seealso \code{\link{dsApiRequest}}
+#' @seealso \code{\link{dsAuth}}
+#' @seealso \code{\link{dsQueryBuild}}
+#'
+#' @export
 dsApi2df <- function(P){
 
 
