@@ -9,14 +9,17 @@
 #' @param verbose is logical.
 #'
 #' @return a list cointaining bibliographic data downloaded from Dimenbsions.
+#' 
+#' To obtain a free access to Dimenions API fro no commercial use, please visit: \href{https://ds.digital-science.com/NoCostAgreement}{https://ds.digital-science.com/NoCostAgreement}
 #'
-#' For more extensive information about dimensions API, please see: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
-#' For more extensive information about dimensions API, please see: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
+#' For more extensive information about dimensions API, please visit: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
 #'
 #' @examples
 #'
 #' # token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
-#' # query <- dsQueryBuild(item = "publications", words = "bibliometric*", type = "article", categories="management", start_year=1980,end_year = 2020)
+#' # query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
+#' #                        type = "article", categories = "management", 
+#' #                       start_year=1980,end_year = 2020)
 #' # D <- dsApiRequest(token = token, query = query, limit = 50000)
 #'
 #' @seealso \code{\link{dsQueryBuild}}

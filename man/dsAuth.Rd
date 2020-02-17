@@ -10,14 +10,16 @@ dsAuth(username, password, verbose = FALSE)
 \arguments{
 \item{username}{is a character.}
 
-\item{verbose}{is logical.}
+\item{password}{is a character.}
 
-\item{passwrod}{is a character.}
+\item{verbose}{is logical.}
 }
 \value{
 a character cointaining an token o use dimensions API.
 
-For more extensive information about dimensions API, please see: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
+To obtain a free access to Dimenions API fro no commercial use, please visit: \href{https://ds.digital-science.com/NoCostAgreement}{https://ds.digital-science.com/NoCostAgreement}
+
+For more extensive information about Dimensions API, please visit: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
 }
 \description{
 Obtain an API token from dimensions.ai

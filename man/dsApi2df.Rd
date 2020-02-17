@@ -12,7 +12,9 @@ dsApi2df(P)
 \value{
 a bibliographic dataframe.
 
-For more extensive information about dimensions API, please see: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
+To obtain a free access to Dimenions API fro no commercial use, please visit: \href{https://ds.digital-science.com/NoCostAgreement}{https://ds.digital-science.com/NoCostAgreement}
+
+For more extensive information about dimensions API, please visit: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
 }
 \description{
 It converts dimensions data downloaded using DSL API into a data frame
@@ -20,7 +22,9 @@ It converts dimensions data downloaded using DSL API into a data frame
 \examples{
 
 # token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
-# query <- dsQueryBuild(item = "publications", words = "bibliometric*", type = "article", categories="management", start_year=1980,end_year = 2020)
+# query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
+#                        type = "article", categories = "management", 
+#                       start_year=1980,end_year = 2020)
 # D <- dsApiRequest(token = token, query = query, limit = 50000)
 # M <- dsApi2df(D)
 

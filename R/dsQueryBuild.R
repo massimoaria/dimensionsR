@@ -11,11 +11,15 @@
 #'
 #' @return a character containing the query in DSL format.
 #'
-#' For more extensive information about Dimensions Search Language (DSL), please see: \href{https://docs.dimensions.ai/dsl/}{https://docs.dimensions.ai/dsl/}
+#' For more extensive information about Dimensions Search Language (DSL), please visit: \href{https://docs.dimensions.ai/dsl/}{https://docs.dimensions.ai/dsl/}
+#'
+#' To obtain a free access to Dimenions API fro no commercial use, please visit: \href{https://ds.digital-science.com/NoCostAgreement}{https://ds.digital-science.com/NoCostAgreement}
 #'
 #' @examples
 #'
-#' query <- dsQueryBuild(item = "publications", words = "bibliometric*", type = "article", categories="management", start_year=1980,end_year = 2020)
+#' # query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
+#' #                        type = "article", categories = "management", 
+#' #                       start_year=1980,end_year = 2020)
 #' 
 #' @seealso \code{\link{dsApiRequest}}
 #' @seealso \code{\link{dsAuth}}
