@@ -2,7 +2,7 @@
 % Please edit documentation in R/dsApi2df.R
 \name{dsApi2df}
 \alias{dsApi2df}
-\title{Convert data in json dimensions structure to a dataframe}
+\title{Convert json dimensions bibliographic data into a dataframe}
 \usage{
 dsApi2df(P, format = "bibliometrix")
 }
@@ -18,9 +18,11 @@ a bibliographic dataframe.
 To obtain a free access to Dimenions API fro no commercial use, please visit: \href{https://ds.digital-science.com/NoCostAgreement}{https://ds.digital-science.com/NoCostAgreement}
 
 For more extensive information about dimensions API, please visit: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
+
+For more extensive information about bibliometrix R packagee, please visit: \href{https://www.bibliometrix.org}{https://www.bibliometrix.org}
 }
 \description{
-It converts dimensions data downloaded using DSL API into a data frame
+It converts dimensions data, downloaded using DSL API, into a dataframe
 }
 \examples{
 

@@ -1,6 +1,6 @@
-#' Convert data in json dimensions structure to a dataframe
+#' Convert json dimensions bibliographic data into a dataframe
 #' 
-#' It converts dimensions data downloaded using DSL API into a data frame
+#' It converts dimensions data, downloaded using DSL API, into a dataframe
 #' 
 #' @param P is a list in json dimensions structure downloaded using the function \code{dsApiRequest}.
 #' @param format is a character. If \code{format = "bibliometrix"} data will be converted in the bibliometrix complatible data format. 
@@ -11,7 +11,9 @@
 #' To obtain a free access to Dimenions API fro no commercial use, please visit: \href{https://ds.digital-science.com/NoCostAgreement}{https://ds.digital-science.com/NoCostAgreement}
 #' 
 #' For more extensive information about dimensions API, please visit: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
-#'
+#' 
+#' For more extensive information about bibliometrix R packagee, please visit: \href{https://www.bibliometrix.org}{https://www.bibliometrix.org}
+#' 
 #' @examples
 #'
 #' # token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
