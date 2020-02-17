@@ -4,10 +4,13 @@
 \alias{dsApi2df}
 \title{Convert data in json dimensions structure to a dataframe}
 \usage{
-dsApi2df(P)
+dsApi2df(P, format = "bibliometrix")
 }
 \arguments{
 \item{P}{is a list in json dimensions structure downloaded using the function \code{dsApiRequest}.}
+
+\item{format}{is a character. If \code{format = "bibliometrix"} data will be converted in the bibliometrix complatible data format. 
+If \code{format = "raw"} data will save in a data frame without any other data editing procedure.}
 }
 \value{
 a bibliographic dataframe.

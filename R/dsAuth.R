@@ -1,4 +1,5 @@
 #' Obtain an API token from dimensions.ai
+#' 
 #' It generates a token request to dimensions.ai using account and password.
 #'
 #' @param username is a character.

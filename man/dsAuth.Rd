@@ -2,8 +2,7 @@
 % Please edit documentation in R/dsAuth.R
 \name{dsAuth}
 \alias{dsAuth}
-\title{Obtain an API token from dimensions.ai
-It generates a token request to dimensions.ai using account and password.}
+\title{Obtain an API token from dimensions.ai}
 \usage{
 dsAuth(username, password, verbose = FALSE)
 }
@@ -22,7 +21,6 @@ To obtain a free access to Dimenions API fro no commercial use, please visit: \h
 For more extensive information about Dimensions API, please visit: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
 }
 \description{
-Obtain an API token from dimensions.ai
 It generates a token request to dimensions.ai using account and password.
 }
 \examples{

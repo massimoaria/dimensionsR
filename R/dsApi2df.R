@@ -3,6 +3,8 @@
 #' It converts dimensions data downloaded using DSL API into a data frame
 #' 
 #' @param P is a list in json dimensions structure downloaded using the function \code{dsApiRequest}.
+#' @param format is a character. If \code{format = "bibliometrix"} data will be converted in the bibliometrix complatible data format. 
+#' If \code{format = "raw"} data will save in a data frame without any other data editing procedure.
 #' 
 #' @return a bibliographic dataframe.
 #' 
@@ -24,223 +26,225 @@
 #' @seealso \code{\link{dsQueryBuild}}
 #'
 #' @export
-dsApi2df <- function(P){
-
-
-#library(bibliometrix)
-
-n <- length(P)
-
-
-### Data Conversion
-
-df <- data.frame(AU=rep(NA,n), AF="NA",TI="NA", SO="NA", SO_LIST=NA, LA="English", DT=NA,DE=NA,ID=NA,AB="NA",C1=NA,RP=NA,OI=NA,FU=NA,CR=NA,
-                 ALT=NA, TC=NA, TCR=NA,PU=NA,SN=NA, J9=NA, JI=NA, PY=NA, VL=NA, IS=NA, DI=NA, PG=NA, SC=NA, OA=NA, URL=NA, DB="DIMENSIONS",
-                 AU_UN=NA, AU1_UN=NA, SR_FULL=NA,  stringsAsFactors = FALSE)
-
-for (i in 1:n) {
-  if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
-  #print(i)
-  if (P[[i]]$type %in% c("article", "chapter")){
-
-    ## Document Type
-    if (length(P[[i]]$type)>0){df$DT[i] <- P[[i]]$type}
-
-    ## Title
-    if (length(P[[i]]$title)>0){df$TI[i] <- P[[i]]$title}
-
-    ## Publication Year
-    if (length(P[[i]]$year)>0){df$PY[i] <- P[[i]]$year}
-
-    ## N. of Co-Authors
-    n_AU <- length(P[[i]]$authors)
-
-    ## Authors, Affiliations and Countries
-    name <- affiliation <- affiliation_name <- country <- rep(NA, n_AU)
-    for (j in 1:n_AU) {
-      if (length(P[[i]]$authors[[j]])>0){
-        name[j] <-
-          paste(P[[i]]$authors[[j]]$last_name, P[[i]]$authors[[j]]$first_name, sep=", ")}else{name[j]="NA"}
-      if (length(P[[i]]$authors[[j]]$affiliations)>0){
-        if (length(P[[i]]$authors[[j]]$affiliations[[1]]$country)>0) {
-          country[j] <- P[[i]]$authors[[j]]$affiliations[[1]]$country
-        } else{
-          country[j] = ""
-        }
-        affiliation_name[j] <- P[[i]]$authors[[j]]$affiliations[[1]]$name
-        affiliation[j] <-
-          if (nchar(country[j])>0){
-          paste(affiliation_name[j],
-                P[[i]]$authors[[j]]$affiliations[[1]]$city,
-                country[j],
-                sep = ",")}else{
-                  paste(affiliation_name[j],
-                        P[[i]]$authors[[j]]$affiliations[[1]]$city,
-                        sep = ",")}
-      }else{
-        affiliation_name[j] <- affiliation[j] <- "NA"
+dsApi2df <- function(P, format = "bibliometrix"){
+  
+  
+  #library(bibliometrix)
+  
+  n <- length(P)
+  
+  
+  ### Data Conversion
+  
+  df <- data.frame(AU=rep(NA,n), AF="NA",TI="NA", SO="NA", SO_LIST=NA, LA="English", DT=NA,DE=NA,ID=NA,AB="NA",C1=NA,RP=NA,OI=NA,FU=NA,CR=NA,
+                   ALT=NA, TC=NA, TCR=NA,PU=NA,SN=NA, J9=NA, JI=NA, PY=NA, VL=NA, IS=NA, DI=NA, PG=NA, SC=NA, OA=NA, URL=NA, DB="DIMENSIONS",
+                   AU_UN=NA, AU1_UN=NA, AU_CO=NA, AU1_CO=NA, SR_FULL=NA,  stringsAsFactors = FALSE)
+  
+  for (i in 1:n) {
+    if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
+    #print(i)
+    if (P[[i]]$type %in% c("article", "chapter")){
+      a <- list2char(P[[i]])
+      
+      items<- names(a)
+      ## Document Type
+      df$DT[i] <- a["type"]
+      
+      ## Title
+      df$TI[i] <- a["title"]
+      
+      ## Publication Year
+      df$PY <- a["year"]
+      
+      ## Co-Authors
+      AU_last_ind <- which(items == "authors.last_name")
+      AU_first_ind <- which(items == "authors.first_name")
+      name <-  paste(a[AU_last_ind], a[AU_first_ind], sep=", ")
+      df$AF[i] <- paste(name, collapse = ";")
+      
+      ## Countries
+      CO_ind <- which(items == "authors.affiliations.country")
+      country <- a[CO_ind]
+      
+      ## Affiliations
+      Aff_name_ind <- which(items == "authors.affiliations.name")
+      Affiliations <- a[Aff_name_ind]
+      
+      Aff_city_ind <- which(items == "authors.affiliations.city")
+      city <- a[Aff_city_ind]
+      
+      df$C1[i] <- paste(Affiliations, country, sep=", ", collapse=";")
+      
+      ## Author's countries
+      df$AU_CO[i] <- paste(country, collapse = ";")
+      
+      ## Author's Affilaiiton standardized
+      df$AU_UN[i] <- paste(Affiliations, collapse = ";")
+      
+      ## Corresponding Author
+      AU_corr <- which(items =="authors.corresponding")
+      j <- which(a[AU_corr]=="TRUE")[1]
+      if (length(j)>0) {
+        df$RP[i] <- paste(Affiliations[j],country[j],sep=",",collapse=";")
+        df$AU1_UN[i] <- Affiliations[j]
+        df$AU1_CO[i] <- country[j]
       }
-      if (length(P[[i]]$authors[[j]]$corresponding == "TRUE")>0){
-      if (P[[i]]$authors[[j]]$corresponding == "TRUE") {
-        df$RP[i] <- affiliation[j]
-        df$AU1_UN[i] <- affiliation_name[j]
-      }}
+      
+      
+      ## Subject categories
+      SC_ind <- which(items == "category_for.name")
+      df$SC[i] <- trimws(gsub('[[:digit:]]+', '', paste(a[SC_ind], collapse =";")))
+      
+      
+      ## Keywords
+      ID_ind <- which(regexpr("concepts",items)>-1)
+      df$ID[i] <- paste(a[ID_ind],collapse=";")
+      
+      DE_ind <- which(regexpr("terms",items)>-1)
+      df$DE[i] <- paste(a[DE_ind],collapse=";")
+      
+      ## Journals
+      
+      SO_ind <- which(items %in% c("journal.title", "book_title"))
+      df$SO[i] <- a[SO_ind[1]]
+      
+      
+      ## Doi
+      df$DI[i] <- a["doi"]
+      
+      ## Journal List
+      SO_list_ind <- which(regexpr("journal_lists",items)>-1)
+      df$SO_LIST[i] <- paste(a[SO_list_ind],collapse=";")
+      
+      ## URL
+      df$URL[i] <- a["linkout"]
+      
+      ## Total Citations
+      df$TC[i] <- a["times_cited"]
+      
+      ## Altmetrics
+      df$ALT[i] <- a["altmetric"]
+      
+      ## Recent TC
+      df$TCR[i] <- a["recent_citations"]
+      
+      
+      ## References
+      CR_ind <- which(regexpr("reference_ids",items)>-1)
+      df$CR[i] <- paste(a[CR_ind], collapse = ";")
+      
+      ## ISSN
+      df$SN[i] <- a["issn"]
+      
+      ## Pages
+      df$PG[i] <- a["pages"]
+      
+      ## Founders
+      FU_name_ind <- which(regexpr("funders.name",items)>-1)
+      FU_acronym_ind <- which(regexpr("funders.acronym",items)>-1)
+      FU_city <- which(regexpr("funders.city_name",items)>-1)
+      FU_country <- which(regexpr("funders.country_name",items)>-1)
+      df$FU[i] <- paste(a[FU_name_ind],a[FU_acronym_ind],a[FU_city],a[FU_country],sep=",",collapse=";")
+      
+      ## Publisher
+      df$PU[i] <- a["publisher"]
+      
+      ## Volume
+      df$VL[i] <- a["volume"]
+      
+      ## Issue
+      df$IS[i] <- a["issue"]
+      
+      ## Orcid ID
+      OI_orcid_ind <- which(items == "researchers.orcid_id")
+      
+      df$OI[i] <- paste(a[OI_orcid_ind],collapse=";")
+      
+      ## Open Access
+      df$OA[i] <- a["open_access_categories.name"]
+      
     }
-
-    df$AF[i] <- paste(name, collapse = ";")
-    df$C1[i] <- paste(affiliation, collapse = ";")
-    df$AU_CO[i] <- paste(country, collapse = ";")
-    df$AU_UN[i] <- paste(affiliation_name, collapse = ";")
-
-    ## Subject categories
-    if (length(P[[i]]$category_for )>0){
-      SC <- unlist(P[[1]]$category_for)
-      df$SC[i] <-
-        trimws(gsub('[[:digit:]]+', '', paste(SC[which(names(SC) == "name")], collapse =
-                                                ";")))}
-
-    ## Keywords
-    if (length(P[[i]]$concepts)>0){
-      df$ID[i] <- paste(unlist(P[[i]]$concepts), collapse = ";")
-      df$DE[i] <- paste(unlist(P[[i]]$terms), collapse = ";")}
-
-    ## Journals
-    switch(df$DT[i],
-           chapter={
-             if (length(P[[i]]$book_title)>0){
-               df$SO[i] <- df$JI[i] <- df$J9[i] <- P[[i]]$book_title}},
-           article={
-             if (length(P[[i]]$journal$title)>0){
-               df$SO[i] <- df$JI[i] <- df$J9[i] <- P[[i]]$journal$title}})
-
-
-
-    ## Doi
-    if (length(P[[i]]$doi )>0){df$DI[i] <- P[[i]]$doi}
-
-    ## Journal List
-    if (length(P[[i]]$journal_lists )>0){
-      df$SO_LIST[i] <- paste(unlist(P[[i]]$journal_lists), collapse = ";")}
-
-    ## URL
-    if (length(P[[i]]$linkout)){
-      df$URL[i] <- P[[i]]$linkout}
-
-    ## Total Citations
-    if (length(P[[i]]$times_cited )>0){
-      df$TC[i] <- P[[i]]$times_cited}
-
-    ## Altmetrics
-    if (length(P[[i]]$altmetric)>0){
-      df$ALT[i] <- P[[i]]$altmetric}
-
-    ## Recent TC
-    if (length(P[[i]]$recent_citations )>0){
-      df$TCR[i] <- P[[i]]$recent_citations}
-
-    ## References
-    if (length(P[[i]]$reference_ids )>0){
-      df$CR[i] <- paste(unlist(P[[i]]$reference_ids), collapse = ";")}
-
-    ## ISSN
-    if (length(P[[i]]$issn )>0){df$SN[i] <- P[[i]]$issn[[1]]}
-
-    ## Pages
-    if (length(P[[i]]$pages )>0){df$PG[i] <- P[[i]]$pages}
-
-    ## Founders
-    if (length(P[[i]]$funders )>0){
-      df$FU[i] <- paste(unlist(lapply(P[[i]]$funders, function(l) {
-        l <- unlist(l)
-        l <-
-          l[which(names(l) %in% c("name", "acronym", "city_name", "country_name"))]
-        l <-
-          paste(l[c("name", "acronym", "city_name", "country_name")], collapse =
-                  ",")
-      })), collapse = ";")}
-
-    ## Publisher
-    if (length(P[[i]]$publisher )>0){df$PU[i] <- P[[i]]$publisher}
-
-    ## Volume
-    if (length(P[[i]]$volume )>0){df$VL[i] <- P[[i]]$volume}
-
-    ## Issue
-    if (length(P[[i]]$issue)>0){df$IS[i] <- P[[i]]$issue}
-
-    ## Orcid ID
-    if (length(P[[i]]$researchers )>0){
-      df$OI[i] <- paste(unlist(lapply(P[[i]]$researchers, function(l) {
-        l <- unlist(l)
-        l <-
-          l[which(names(l) %in% c("last_name", "first_name", "orcid_id"))]
-        l <-
-          paste(paste(l[c("last_name", "first_name")], collapse = " "), l["orcid_id"], sep =
-                  ",")
-      })), collapse = ";")}
-
-    ## Open Access
-    if (length(P[[i]]$open_access_categories )>0){
-      df$OA[i] <- P[[i]]$open_access_categories[[1]]$name}
   }
-}
-DI<-df$DI
-df <- data.frame(lapply(df,toupper),stringsAsFactors = FALSE)
-df$DI <- DI
-
-### PY
-df$PY <- as.numeric(df$PY)
-
-### TC and TCR
-df$TCR <- as.numeric(df$TCR)
-df$TCR[is.na(df$TCR)] <- 0
-df$TC <- as.numeric(df$TC)
-df$TC[is.na(df$TC)] <- 0
-
-###  remove empy rows
-df=df[!is.na(df$DT),]
-
-### Author AU
-
-df$AU <- df$AF
-
-df$AU <- gsub("\\s+", " ", df$AU)
-df$AU <- trimws(gsub("\\(|\\)","",df$AU))
-
-listAU <- strsplit(df$AU, ";")
-
-AU <- lapply(listAU, function(l) {
-  lastname <- trimws(gsub(",.*", "", l))
-  firstname <- strsplit(trimws(gsub(".*,", "", l)), " ")
-  i <- which(nchar(lastname)<2)
-  if (length(i)>0){
-    lastname <- lastname[-i]
-    firstname <- firstname[-i]
+  
+  
+  if (format == "bibliometrix") {
+    DI <- df$DI
+    URL <- df$URL
+    df <- data.frame(lapply(df, toupper), stringsAsFactors = FALSE)
+    df$DI <- DI
+    df$URL <- URL
   }
-  firstname <- lapply(firstname, function(x) {
-    if (length(x) > 0) {
-      x <- paste(substr(x, 1, 1), sep = "", collapse = "")
-    } else {
-      x = ""
+  
+  ### PY
+  df$PY <- as.numeric(df$PY)
+  
+  ### TC and TCR
+  df$TCR <- as.numeric(df$TCR)
+  df$TCR[is.na(df$TCR)] <- 0
+  df$TC <- as.numeric(df$TC)
+  df$TC[is.na(df$TC)] <- 0
+  
+  ###  remove empy rows
+  df=df[!is.na(df$DT),]
+  
+  ### Author AU
+  
+  df$AU <- df$AF
+  
+  df$AU <- gsub("\\s+", " ", df$AU)
+  df$AU <- trimws(gsub("\\(|\\)","",df$AU))
+  
+  listAU <- strsplit(df$AU, ";")
+  
+  AU <- lapply(listAU, function(l) {
+    lastname <- trimws(gsub(",.*", "", l))
+    firstname <- strsplit(trimws(gsub(".*,", "", l)), " ")
+    i <- which(nchar(lastname)<2)
+    if (length(i)>0){
+      lastname <- lastname[-i]
+      firstname <- firstname[-i]
     }
-    return(x)
+    firstname <- lapply(firstname, function(x) {
+      if (length(x) > 0) {
+        x <- paste(substr(x, 1, 1), sep = "", collapse = "")
+      } else {
+        x = ""
+      }
+      return(x)
+    })
+    AU <- paste(lastname,
+                unlist(firstname),
+                sep = " ",
+                collapse = ";")
+    return(AU)
   })
-  AU <- paste(lastname,
-              unlist(firstname),
-              sep = " ",
-              collapse = ";")
-  return(AU)
-})
+  
+  df$AU <- unlist(AU)
+  df$AU[df$AU=="NA N"] <- NA
+  
+  #### To Add in convert2df
+  ### SR field creation
+  #suppressWarnings(df <- metaTagExtraction(df, Field="SR"))
+  
+  #row.names(df) <- df$SR
+  
+  return(df)
+  
+}
 
-df$AU <- unlist(AU)
-df$AU[df$AU=="NA N"] <- NA
 
-#### To Add in convert2df
-### SR field creation
-#suppressWarnings(df <- metaTagExtraction(df, Field="SR"))
-
-#row.names(df) <- df$SR
-
-return(df)
-
+list2char <- function (x, use.names = TRUE, classes = "ANY") 
+{
+  lung <- sum(rapply(x, function(x) 1L, classes = classes))
+  Ch <- vector("list", lung)
+  i <- 0L
+  items <- rapply(x, function(x) {
+    i <<- i + 1L
+    Ch[[i]] <<- x
+    TRUE
+  }, classes = classes)
+  if (use.names && !is.null(nm <- names(items))) 
+    names(Ch) <- nm
+  Ch <- unlist(Ch)
+  return(Ch)
 }
