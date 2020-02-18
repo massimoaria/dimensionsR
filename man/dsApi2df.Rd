@@ -4,16 +4,18 @@
 \alias{dsApi2df}
 \title{Convert json dimensions bibliographic data into a dataframe}
 \usage{
-dsApi2df(P, format = "bibliometrix")
+dsApi2df(P, item = "publications", format = "bibliometrix")
 }
 \arguments{
 \item{P}{is a list in json dimensions structure downloaded using the function \code{dsApiRequest}.}
 
 \item{format}{is a character. If \code{format = "bibliometrix"} data will be converted in the bibliometrix complatible data format. 
 If \code{format = "raw"} data will save in a data frame without any other data editing procedure.}
+
+\item{is}{a character. It iindicates the record type contained in the json file. The argument can be \code{item = c("publications","grants")}. Default value is \code{item = "publications"}.}
 }
 \value{
-a bibliographic dataframe.
+a dataframe containing bibliographic records or grants information.
 
 To obtain a free access to Dimenions API fro no commercial use, please visit: \href{https://ds.digital-science.com/NoCostAgreement}{https://ds.digital-science.com/NoCostAgreement}
 
@@ -26,12 +28,25 @@ It converts dimensions data, downloaded using DSL API, into a dataframe
 }
 \examples{
 
+
+# Example 1: Querying a collection of publications
+
 # token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
 # query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
 #                        type = "article", categories = "management", 
 #                       start_year=1980,end_year = 2020)
 # D <- dsApiRequest(token = token, query = query, limit = 50000)
-# M <- dsApi2df(D)
+# M <- dsApi2df(D, item = "publications")
+
+
+# Example 2: Querying a colelction of grants
+
+# token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+# query <- dsQueryBuild(item = "grants", words = "bibliometric*", 
+#                        type = "", categories = "management", 
+#                       start_year=1980,end_year = 2020)
+# D <- dsApiRequest(token = token, query = query, limit = 50000)
+# M <- dsApi2df(D, item = "grants")
 
 }
 \seealso{

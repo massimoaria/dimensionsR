@@ -3,10 +3,11 @@
 #' It converts dimensions data, downloaded using DSL API, into a dataframe
 #' 
 #' @param P is a list in json dimensions structure downloaded using the function \code{dsApiRequest}.
+#' @param is a character. It iindicates the record type contained in the json file. The argument can be \code{item = c("publications","grants")}. Default value is \code{item = "publications"}.
 #' @param format is a character. If \code{format = "bibliometrix"} data will be converted in the bibliometrix complatible data format. 
 #' If \code{format = "raw"} data will save in a data frame without any other data editing procedure.
 #' 
-#' @return a bibliographic dataframe.
+#' @return a dataframe containing bibliographic records or grants information.
 #' 
 #' To obtain a free access to Dimenions API fro no commercial use, please visit: \href{https://ds.digital-science.com/NoCostAgreement}{https://ds.digital-science.com/NoCostAgreement}
 #' 
@@ -16,22 +17,47 @@
 #' 
 #' @examples
 #'
+#'
+#' # Example 1: Querying a collection of publications
+#' 
 #' # token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
 #' # query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
 #' #                        type = "article", categories = "management", 
 #' #                       start_year=1980,end_year = 2020)
 #' # D <- dsApiRequest(token = token, query = query, limit = 50000)
-#' # M <- dsApi2df(D)
+#' # M <- dsApi2df(D, item = "publications")
+#'
+#'
+#' # Example 2: Querying a colelction of grants
+#'
+#' # token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+#' # query <- dsQueryBuild(item = "grants", words = "bibliometric*", 
+#' #                        type = "", categories = "management", 
+#' #                       start_year=1980,end_year = 2020)
+#' # D <- dsApiRequest(token = token, query = query, limit = 50000)
+#' # M <- dsApi2df(D, item = "grants")
 #'
 #' @seealso \code{\link{dsApiRequest}}
 #' @seealso \code{\link{dsAuth}}
 #' @seealso \code{\link{dsQueryBuild}}
 #'
 #' @export
-dsApi2df <- function(P, format = "bibliometrix"){
+dsApi2df <- function(P, item = "publications", format = "bibliometrix"){
   
-  
-  #library(bibliometrix)
+switch(item,
+       publications={
+         df <- pub2df(P,format)
+       },
+       grants={
+         df <- grants2df(P)
+       }) 
+
+return(df)
+
+}
+
+#### Publications #### 
+pub2df <- function(P, format){
   
   n <- length(P)
   
@@ -42,9 +68,12 @@ dsApi2df <- function(P, format = "bibliometrix"){
                    ALT=NA, TC=NA, TCR=NA,PU=NA,SN=NA, J9=NA, JI=NA, PY=NA, VL=NA, IS=NA, DI=NA, PG=NA, SC=NA, OA=NA, URL=NA, DB="DIMENSIONS",
                    AU_UN=NA, AU1_UN=NA, AU_CO=NA, AU1_CO=NA, SR_FULL=NA,  stringsAsFactors = FALSE)
   
+  pb <- txtProgressBar(min = 1, max = n, initial = 1, char = "=")
+  
   for (i in 1:n) {
-    if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
+    #if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
     #print(i)
+    setTxtProgressBar(pb, i)
     if (P[[i]]$type %in% c("article", "chapter")){
       a <- list2char(P[[i]])
       
@@ -100,10 +129,7 @@ dsApi2df <- function(P, format = "bibliometrix"){
       
       ## Keywords
       ID_ind <- which(regexpr("concepts",items)>-1)
-      df$ID[i] <- paste(a[ID_ind],collapse=";")
-      
-      DE_ind <- which(regexpr("terms",items)>-1)
-      df$DE[i] <- paste(a[DE_ind],collapse=";")
+      df$ID[i] <- df$DE[i] <- paste(a[ID_ind],collapse=";")
       
       ## Journals
       
@@ -229,12 +255,118 @@ dsApi2df <- function(P, format = "bibliometrix"){
   #suppressWarnings(df <- metaTagExtraction(df, Field="SR"))
   
   #row.names(df) <- df$SR
+  close(pb)
   
   return(df)
   
 }
 
 
+#### grants ####
+grants2df <- function(P){
+  
+  n <- length(P)
+  
+  
+  ### Data Conversion
+  
+  df <- data.frame(title=rep(NA,n), investigator=NA, role=NA, affiliation=NA, start_year=NA, start_date=NA, end_date=NA, research_org=NA, research_org_country=NA, research_org_city=NA, category=NA,
+                   concepts=NA, abstract=NA, funders=NA, grant_number=NA, project_number=NA, language=NA, funding_usd=NA, funding_eur=NA, stringsAsFactors = FALSE)
+  
+  pb <- txtProgressBar(min = 1, max = n, initial = 1, char = "=")
+  
+  for (i in 1:n) {
+    #if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
+    #print(i)
+    setTxtProgressBar(pb, i)
+    
+      a <- list2char(P[[i]])
+      items <- names(a)
+      
+      ## Title
+      df$title[i] <- a["title"]
+      
+      ## Investigators
+      AU_last_ind <- which(items == "investigator_details.last_name")
+      AU_first_ind <- which(items == "investigator_details.first_name")
+      name <-  paste(a[AU_last_ind], a[AU_first_ind], sep=", ")
+      df$investigator[i] <- paste(name, collapse = ";")
+      
+      ## Role
+      Role_ind <- which(items == "investigator_details.role")
+      df$role[i] <- paste(a[Role_ind],collapse=";")
+      
+      ## Investigator's affiliations
+      Aff_name_ind <- which(items == "investigator_details.affiliations.name")
+      df$affiliation[i] <- paste(a[Aff_name_ind], collapse=";")
+      
+      ## Start Year
+      df$start_year[i] <- a["start_year"]
+      
+      ## Start date
+      df$start_date[i] <- a['start_date']
+      
+      ## End date
+      df$end_date[i] <- a['end_date']
+      
+      ## Countries
+      CO_ind <- which(items == "research_org_countries.name")
+      df$research_org_country[i] <- paste(a[CO_ind], collapse=";")
+      
+      ## Research Organizations
+      Aff_name_ind <- which(items == "research_org_name")
+      df$research_org[i] <- paste(a[Aff_name_ind],collapse=";")
+      
+      Aff_city_ind <- which(items == "research_orgs.city_name")
+      df$research_org_city[i] <- paste(a[Aff_city_ind], collapse=";")
+      
+      ## Subject categories
+      SC_ind <- which(items == "category_for.name")
+      df$category[i] <- trimws(gsub('[[:digit:]]+', '', paste(a[SC_ind], collapse =";")))
+      
+      
+      ## Keywords
+      ID_ind <- which(regexpr("concepts",items)>-1)
+      df$concepts[i] <- paste(a[ID_ind],collapse=";")
+      
+      ## Abstract
+      df$abstract[i] <- a['abstract']
+
+      ## Funders
+      FU_name_ind <- which(regexpr("funders.name",items)>-1)
+      FU_acronym_ind <- which(regexpr("funders.acronym",items)>-1)
+      FU_city <- which(regexpr("funders.city_name",items)>-1)
+      FU_country <- which(regexpr("funders.country_name",items)>-1)
+      df$funders[i] <- paste(a[FU_name_ind],a[FU_acronym_ind],a[FU_city],a[FU_country],sep=",",collapse=";")
+      
+      ## Grant number
+      df$grant_number[i] <- a['grant_number']      
+      
+      ## URL
+      df$URL[i] <- a["linkout"]
+      
+      ## Project numebr
+      df$project_number[i] <- a['project_num']
+      
+      ## Language
+      df$language[i] <- a['language']
+      
+      ## Funding value
+      df$funding_usd[i] <- a['funding_usd']
+      df$funding_eur[i] <- a['funding_eur']
+      
+    
+  }
+  
+  close(pb)
+  
+  return(df)
+  
+}
+
+
+
+#### function list2char ####
 list2char <- function (x, use.names = TRUE, classes = "ANY") 
 {
   lung <- sum(rapply(x, function(x) 1L, classes = classes))
