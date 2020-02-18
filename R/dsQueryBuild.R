@@ -69,7 +69,14 @@ dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.se
   if (is.null(end_year))
     end_year <-  substr(Sys.Date(), 1, 4)
 
-  filter_period <- paste('year in [', start_year, ':', end_year, ']')
+  if (item == "publications") {
+    year <- "year in ["
+  } else{
+    year <- "start_year in ["
+  }
+  
+    
+  filter_period <- paste(year, start_year, ':', end_year, ']')
 
   # by document type
 
@@ -77,43 +84,35 @@ dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.se
     a <- trimws(unlist(strsplit(type, ";")))
     a <- paste('"', a, '"', collapse = ",", sep = "")
     filter_type <- paste('type in [', a, ']')
-  }
+  } 
 
 
   return_item = paste0(item, "[all]")
 
   #step_query <- ' limit 1000 skip 0'
-
-  if (nchar(categories) > 0) {
-    query <-  paste0(
-      'search ',
-      item,
-      search_type,
-      words_query,
-      ' where ',
-      filter_period,
-      ' and ',
-      filter_type,
-      ' and (',
-      filter_category,
-      ')',
-      ' return ',
-      return_item
-    )
-  } else {
-    query <-  paste0(
-      'search ',
-      item,
-      search_type,
-      words_query,
-      ' where ',
-      filter_period,
-      ' and ',
-      filter_type,
-      ' return ',
-      return_item
-    )
+  
+  query <- paste0('search ', item,
+                  search_type,
+                  words_query,
+                  ' where ',
+                  filter_period)
+  if (nchar(type)>0){
+    query <-  paste0(query,
+                     ' and ',
+                     filter_type)
   }
+  
+  if (nchar(categories) > 0) {
+    query <-  paste0(query,
+                     ' and (',
+                     filter_category,
+                     ')')
+  }
+  
+  query <- paste0(query,
+                  ' return ',
+                   return_item)
+  
 
   return(query)
 

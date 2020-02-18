@@ -82,8 +82,9 @@ dsApiRequest <- function(token, query, limit = 50000, verbose = FALSE){
 
     DD <-
       fromJSON(content(d, "text", encoding = "UTF-8"), simplifyVector = FALSE)
-    n <- n + length(DD$publications)
-    D <- c(D, DD$publications)
+    item <- strsplit(query," ")[[1]][2]
+    n <- n + length(DD[[item]])
+    D <- c(D, DD[[item]])
 
     if (cont == 1){
       tot <- min(DD$`_stats`$total_count, limit)
