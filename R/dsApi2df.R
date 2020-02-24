@@ -50,6 +50,9 @@ switch(item,
        },
        grants={
          df <- grants2df(P)
+       },
+       patents={
+         df <- patents2df(P)
        }) 
 
 return(df)
@@ -262,6 +265,97 @@ pub2df <- function(P, format){
 }
 
 
+
+#### Patents ####
+patents2df <- function(P){
+  
+  n <- length(P)
+  
+  
+  ### Data Conversion
+  
+  df <- data.frame(title=rep(NA,n), assignee=NA, year=NA, date=NA, exp_date=NA, assignee_country=NA, assignee_city=NA, category=NA,
+                   abstract=NA, cited_by=NA, patent_number=NA, jurisdiction=NA, status=NA, citing=NA, references=NA, TC=NA, stringsAsFactors = FALSE)
+  
+  pb <- txtProgressBar(min = 1, max = n, initial = 1, char = "=")
+  
+  for (i in 1:n) {
+    #if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
+    #print(i)
+    setTxtProgressBar(pb, i)
+    
+    a <- list2char(P[[i]])
+    items <- names(a)
+    
+    ## Title
+    df$title[i] <- a["title"]
+    
+
+    ## Investigator's affiliations
+    Aff_name_ind <- which(regexpr("assignee_names",items)>-1)
+    df$assignee[i] <- paste(a[Aff_name_ind], collapse=";")
+    
+    ## Year
+    df$year[i] <- a["year"]
+    
+    ## date
+    df$date[i] <- a['date']
+    
+    ## Expiration_date
+    df$exp_date[i] <- a["expiration_date"]
+    
+    ## Countries
+    CO_ind <- which(items == "assignee_countries.name")
+    df$assignee_country[i] <- paste(a[CO_ind], collapse=";")
+    
+    # City
+    Aff_city_ind <- which(items == "current_assignees.city_name")
+    df$assignee_city[i] <- paste(a[Aff_city_ind], collapse=";")
+    
+    ## Subject categories
+    SC_ind <- which(items == "category_for.name")
+    df$category[i] <- trimws(gsub('[[:digit:]]+', '', paste(a[SC_ind], collapse =";")))
+    
+    
+    ## Abstract
+    df$abstract[i] <- a['abstract']
+    
+    ## Grant number
+    cited_ind <- which(regexpr("cited_by_ids",items)>-1)
+    df$cited_by[i] <- paste(a[cited_ind], collapse=";")     
+    
+    ## Patent number
+    df$patent_number[i] <- a['id']
+    
+    ## jurisdiction
+    df$jurisdiction[i] <- a["jurisdiction"]
+    
+    ## status
+    df$status[i] <- a["status" ]
+    
+    ## Citing
+    ref_ind <- which(regexpr("reference_ids",items)>-1)
+    df$citing[i] <- paste(a[ref_ind], collapse=";")   
+    
+    ## References
+    pub_ind <- which(regexpr("publication_ids",items)>-1)
+    df$references[i] <- paste(a[pub_ind], collapse=";") 
+    
+    ## TC
+    df$TC[i] <- a["times_cited"]
+    
+    
+  }
+  
+  close(pb)
+  
+  return(df)
+  
+}
+
+
+
+
 #### grants ####
 grants2df <- function(P){
   
@@ -363,6 +457,7 @@ grants2df <- function(P){
   return(df)
   
 }
+
 
 
 

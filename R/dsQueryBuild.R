@@ -69,13 +69,17 @@ dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.se
   if (is.null(end_year))
     end_year <-  substr(Sys.Date(), 1, 4)
 
-  if (item == "publications") {
-    year <- "year in ["
-  } else{
-    year <- "start_year in ["
-  }
-  
-    
+  switch(item,
+         publications={
+           year <- "year in ["
+         },
+         grants={
+           year <- "start_year in ["
+         },
+         patents={
+           year <- "year in ["
+         })
+
   filter_period <- paste(year, start_year, ':', end_year, ']')
 
   # by document type
