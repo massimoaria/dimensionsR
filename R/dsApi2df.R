@@ -53,6 +53,9 @@ switch(item,
        },
        patents={
          df <- patents2df(P)
+       },
+       clinical_trials={
+         df <- clinicaltrials2df(P)
        }) 
 
 return(df)
@@ -356,6 +359,7 @@ patents2df <- function(P){
 
 
 
+
 #### grants ####
 grants2df <- function(P){
   
@@ -365,7 +369,7 @@ grants2df <- function(P){
   ### Data Conversion
   
   df <- data.frame(title=rep(NA,n), investigator=NA, role=NA, affiliation=NA, start_year=NA, start_date=NA, end_date=NA, research_org=NA, research_org_country=NA, research_org_city=NA, category=NA,
-                   concepts=NA, abstract=NA, funders=NA, grant_number=NA, project_number=NA, language=NA, funding_usd=NA, funding_eur=NA, stringsAsFactors = FALSE)
+                   concepts=NA, abstract=NA, funders=NA, grant_number=NA, project_number=NA, URL=NA, language=NA, funding_usd=NA, funding_eur=NA, stringsAsFactors = FALSE)
   
   pb <- txtProgressBar(min = 1, max = n, initial = 1, char = "=")
   
@@ -449,6 +453,78 @@ grants2df <- function(P){
       df$funding_usd[i] <- a['funding_usd']
       df$funding_eur[i] <- a['funding_eur']
       
+    
+  }
+  
+  close(pb)
+  
+  return(df)
+  
+}
+
+
+
+
+
+#### clinical trials ####
+clinicaltrials2df <- function(P){
+  
+  n <- length(P)
+  
+  
+  ### Data Conversion
+  
+  df <- data.frame(title=rep(NA,n), start_year=NA, end_year=NA, start_date=NA, research_org=NA, research_org_country=NA, 
+                   abstract=NA, registry=NA, id=NA, gender=NA, URL=NA, phase=NA, stringsAsFactors = FALSE)
+  
+  pb <- txtProgressBar(min = 1, max = n, initial = 1, char = "=")
+  
+  for (i in 1:n) {
+    #if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
+    #print(i)
+    setTxtProgressBar(pb, i)
+    
+    a <- list2char(P[[i]])
+    items <- names(a)
+    
+    ## Title
+    df$title[i] <- a["title"]
+    
+    ## Start Year
+    PY_ind <- which(regexpr("active_years",items)>-1)
+    PY <- sort(a[PY_ind])
+    df$start_year[i] <- PY[1]
+    
+    ## End Year
+    df$end_year[i] <- PY[length(PY)]
+    ## Start date
+    df$start_date[i] <- a['date']
+    
+    ## Countries
+    CO_ind <- which(items == "research_orgs.country_name")
+    df$research_org_country[i] <- paste(a[CO_ind], collapse=";")
+    
+    ## Research Organizations
+    Aff_name_ind <- which(items == "research_orgs.name")
+    df$research_org[i] <- paste(a[Aff_name_ind],collapse=";")
+    
+    ## Abstract
+    df$abstract[i] <- a['abstract']
+    
+    ## Funders
+    df$registry[i] <- a['registry']
+    
+    ## Grant number
+    df$id[i] <- a['id']   
+    
+    ## Gender
+    df$gender[i] <- a['gender']
+    
+    ## URL
+    df$URL[i] <- a["linkout"]
+    
+    ## Phase
+    df$phase[i] <- a['phase']
     
   }
   

@@ -46,6 +46,32 @@ dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.se
 
   # filters
 
+  # by years
+  if (is.null(start_year))
+    start_year <-  "1900"
+  if (is.null(end_year))
+    end_year <-  substr(Sys.Date(), 1, 4)
+  
+  switch(item,
+         publications={
+           year <- "year in ["
+         },
+         grants={
+           year <- "start_year in ["
+           type <- ""
+         },
+         patents={
+           year <- "year in ["
+           type <- ""
+         },
+         clinical_trials={
+           year <- "active_years in ["
+           type <- ""
+           categories <- ""
+         })
+  
+  filter_period <- paste(year, start_year, ':', end_year, ']')
+  
   # by category separated by ;
   # partuial matching '~'
   # categories = "management; economics"
@@ -62,25 +88,6 @@ dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.se
       substr(filter_category, 1, nchar(filter_category) - 4)
   }
 
-
-  # by years
-  if (is.null(start_year))
-    start_year <-  "1900"
-  if (is.null(end_year))
-    end_year <-  substr(Sys.Date(), 1, 4)
-
-  switch(item,
-         publications={
-           year <- "year in ["
-         },
-         grants={
-           year <- "start_year in ["
-         },
-         patents={
-           year <- "year in ["
-         })
-
-  filter_period <- paste(year, start_year, ':', end_year, ']')
 
   # by document type
 
