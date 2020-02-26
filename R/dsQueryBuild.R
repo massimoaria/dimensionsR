@@ -68,6 +68,11 @@ dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.se
            year <- "active_years in ["
            type <- ""
            categories <- ""
+         },
+         policy_documents={
+           year <- "year in ["
+           type <- ""
+           search_type <- gsub("_abstract","",search_type)
          })
   
   filter_period <- paste(year, start_year, ':', end_year, ']')

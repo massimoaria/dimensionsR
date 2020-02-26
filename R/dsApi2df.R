@@ -56,7 +56,10 @@ switch(item,
        },
        clinical_trials={
          df <- clinicaltrials2df(P)
-       }) 
+       },
+       policy_documents={
+         df <- policydocuments2df(P)
+       })
 
 return(df)
 
@@ -525,6 +528,83 @@ clinicaltrials2df <- function(P){
     
     ## Phase
     df$phase[i] <- a['phase']
+    
+  }
+  
+  close(pb)
+  
+  return(df)
+  
+}
+
+
+
+
+
+#### Policy Documents ####
+policydocuments2df <- function(P){
+  
+  n <- length(P)
+  
+  
+  ### Data Conversion
+  
+  df <- data.frame(title=rep(NA,n), publisher=NA, year=NA, date_inserted=NA, publisher_country=NA, publisher_city=NA, publisher_type=NA, publisher_url=NA,
+                   category=NA, source=NA, id=NA, URL=NA, stringsAsFactors = FALSE)
+  
+  pb <- txtProgressBar(min = 1, max = n, initial = 1, char = "=")
+  
+  for (i in 1:n) {
+    #if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
+    #print(i)
+    setTxtProgressBar(pb, i)
+    
+    a <- list2char(P[[i]])
+    items <- names(a)
+    
+    ## Title
+    df$title[i] <- a["title"]
+    
+    
+    ## Investigator's affiliations
+    Aff_name_ind <- which(regexpr("publisher_org.name",items)>-1)
+    df$publisher[i] <- paste(a[Aff_name_ind], collapse=";")
+    
+    ## Year
+    df$year[i] <- a["year"]
+    
+    ## date
+    df$date_inserted[i] <- a['date_inserted']
+    
+    ## Countries
+    CO_ind <- which(items == "publisher_org.country_name")
+    df$publisher_country[i] <- paste(a[CO_ind], collapse=";")
+    
+    # City
+    Aff_city_ind <- which(items == "publisher_org.city_name")
+    df$publisher_city[i] <- paste(a[Aff_city_ind], collapse=";")
+    
+    # Publisher type
+    PT_ind <- which(items == "publisher_org.types")
+    df$publisher_type[i] <- paste(a[PT_ind], collapse=";")
+    
+    # Publisher URL
+    df$publisher_url[i] <- a["publisher_org.linkout" ]
+    
+    
+    ## Subject categories
+    SC_ind <- which(items == "category_for.name")
+    df$category[i] <- trimws(gsub('[[:digit:]]+', '', paste(a[SC_ind], collapse =";")))
+    
+    ## Source
+    df$source[i] <- a["source_name"]
+    
+    ## Document number
+    df$id[i] <- a['id']
+    
+    ## URL
+    df$URL[i] <- a['linkout']
+    
     
   }
   
