@@ -9,10 +9,12 @@ dsApi2df(P, item = "publications", format = "bibliometrix")
 \arguments{
 \item{P}{is a list in json dimensions structure downloaded using the function \code{dsApiRequest}.}
 
+\item{item}{is a character. It iindicates the record type contained in the json file. 
+The argument can be equal to \code{item = ("publications", "grants", "patents", "clinical_trials", "policy_documents")}. 
+Default value is \code{item = "publications"}.}
+
 \item{format}{is a character. If \code{format = "bibliometrix"} data will be converted in the bibliometrix complatible data format. 
 If \code{format = "raw"} data will save in a data frame without any other data editing procedure.}
-
-\item{is}{a character. It iindicates the record type contained in the json file. The argument can be \code{item = c("publications","grants")}. Default value is \code{item = "publications"}.}
 }
 \value{
 a dataframe containing bibliographic records or grants information.

@@ -16,7 +16,7 @@ dsQueryBuild(
 )
 }
 \arguments{
-\item{item}{is a character. It indicates the sub-database to query ("publications", "grants", "patents", "clinical_trials").}
+\item{item}{is a character. It indicates the sub-database to query ("publications", "grants", "patents", "clinical_trials", "policy_documents).}
 
 \item{words}{is a character. It contains the search terms.}
 

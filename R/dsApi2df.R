@@ -3,7 +3,9 @@
 #' It converts dimensions data, downloaded using DSL API, into a dataframe
 #' 
 #' @param P is a list in json dimensions structure downloaded using the function \code{dsApiRequest}.
-#' @param is a character. It iindicates the record type contained in the json file. The argument can be \code{item = c("publications","grants")}. Default value is \code{item = "publications"}.
+#' @param item is a character. It iindicates the record type contained in the json file. 
+#' The argument can be equal to \code{item = ("publications", "grants", "patents", "clinical_trials", "policy_documents")}. 
+#' Default value is \code{item = "publications"}.
 #' @param format is a character. If \code{format = "bibliometrix"} data will be converted in the bibliometrix complatible data format. 
 #' If \code{format = "raw"} data will save in a data frame without any other data editing procedure.
 #' 

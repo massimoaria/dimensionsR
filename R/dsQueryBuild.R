@@ -1,7 +1,7 @@
 #' Generate a DSL query from a set of parameters
 #' It generates a valid query, written following the Dimensions Search Language (DSL), from a set of search parameters.
 #'
-#' @param item is a character. It indicates the sub-database to query ("publications", "grants", "patents", "clinical_trials").
+#' @param item is a character. It indicates the sub-database to query ("publications", "grants", "patents", "clinical_trials", "policy_documents).
 #' @param words is a character. It contains the search terms.
 #' @param full.search is logical. If TRUE, full-text search finds all instances of a term (keyword) in a document, or group of documents. If False, the search finds all instances in titles and abstracts only.
 #' @param type is a character. It indicates the document type to include in the search. Default is \code{type = "article"}.
