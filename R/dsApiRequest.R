@@ -37,10 +37,11 @@ dsApiRequest <- function(token, query, limit = 50000, verbose = FALSE){
   D <- list()
   cont <- n <- 0
 
+  limit <- max(limit,1)
+  
   if (limit > ds.limit){
     limit <-  ds.limit
     cat("\nLimit is to high. Dimensions API rules do not allow to download more than 50.000 records for each query!\nNew limit is set to 50.000\n\n")
-
   }
 
   if (limit>l){
@@ -105,6 +106,6 @@ dsApiRequest <- function(token, query, limit = 50000, verbose = FALSE){
   }
 
 
-
-  return(D)
+  P <- list(data = D, item = item, query = query, total_count = DD$`_stats`$total_count)
+  return(P)
 }

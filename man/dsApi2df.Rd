@@ -4,14 +4,10 @@
 \alias{dsApi2df}
 \title{Convert json dimensions bibliographic data into a dataframe}
 \usage{
-dsApi2df(P, item = "publications", format = "bibliometrix")
+dsApi2df(P, format = "bibliometrix")
 }
 \arguments{
 \item{P}{is a list in json dimensions structure downloaded using the function \code{dsApiRequest}.}
-
-\item{item}{is a character. It iindicates the record type contained in the json file. 
-The argument can be equal to \code{item = ("publications", "grants", "patents", "clinical_trials", "policy_documents")}. 
-Default value is \code{item = "publications"}.}
 
 \item{format}{is a character. If \code{format = "bibliometrix"} data will be converted in the bibliometrix complatible data format. 
 If \code{format = "raw"} data will save in a data frame without any other data editing procedure.}
@@ -38,7 +34,7 @@ It converts dimensions data, downloaded using DSL API, into a dataframe
 #                        type = "article", categories = "management", 
 #                       start_year=1980,end_year = 2020)
 # D <- dsApiRequest(token = token, query = query, limit = 50000)
-# M <- dsApi2df(D, item = "publications")
+# M <- dsApi2df(D)
 
 
 # Example 2: Querying a colelction of grants
@@ -48,7 +44,7 @@ It converts dimensions data, downloaded using DSL API, into a dataframe
 #                        type = "", categories = "management", 
 #                       start_year=1980,end_year = 2020)
 # D <- dsApiRequest(token = token, query = query, limit = 50000)
-# M <- dsApi2df(D, item = "grants")
+# M <- dsApi2df(D)
 
 }
 \seealso{

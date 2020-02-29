@@ -16,7 +16,9 @@ dsQueryBuild(
 )
 }
 \arguments{
-\item{item}{is a character. It indicates the sub-database to query ("publications", "grants", "patents", "clinical_trials", "policy_documents).}
+\item{item}{is a character. It iindicates the record type contained in the json file. 
+The argument can be equal to \code{item = ("publications", "grants", "patents", "clinical_trials", "policy_documents")}. 
+Default value is \code{item = "publications"}.}
 
 \item{words}{is a character. It contains the search terms.}
 

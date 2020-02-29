@@ -3,9 +3,6 @@
 #' It converts dimensions data, downloaded using DSL API, into a dataframe
 #' 
 #' @param P is a list in json dimensions structure downloaded using the function \code{dsApiRequest}.
-#' @param item is a character. It iindicates the record type contained in the json file. 
-#' The argument can be equal to \code{item = ("publications", "grants", "patents", "clinical_trials", "policy_documents")}. 
-#' Default value is \code{item = "publications"}.
 #' @param format is a character. If \code{format = "bibliometrix"} data will be converted in the bibliometrix complatible data format. 
 #' If \code{format = "raw"} data will save in a data frame without any other data editing procedure.
 #' 
@@ -27,7 +24,7 @@
 #' #                        type = "article", categories = "management", 
 #' #                       start_year=1980,end_year = 2020)
 #' # D <- dsApiRequest(token = token, query = query, limit = 50000)
-#' # M <- dsApi2df(D, item = "publications")
+#' # M <- dsApi2df(D)
 #'
 #'
 #' # Example 2: Querying a colelction of grants
@@ -37,14 +34,18 @@
 #' #                        type = "", categories = "management", 
 #' #                       start_year=1980,end_year = 2020)
 #' # D <- dsApiRequest(token = token, query = query, limit = 50000)
-#' # M <- dsApi2df(D, item = "grants")
+#' # M <- dsApi2df(D)
 #'
 #' @seealso \code{\link{dsApiRequest}}
 #' @seealso \code{\link{dsAuth}}
 #' @seealso \code{\link{dsQueryBuild}}
 #'
 #' @export
-dsApi2df <- function(P, item = "publications", format = "bibliometrix"){
+dsApi2df <- function(P, format = "bibliometrix"){
+  
+  query <- P$query
+  item <- P$item
+  P <- P$data
   
 switch(item,
        publications={
@@ -79,12 +80,12 @@ pub2df <- function(P, format){
                    ALT=NA, TC=NA, TCR=NA,PU=NA,SN=NA, J9=NA, JI=NA, PY=NA, VL=NA, IS=NA, DI=NA, PG=NA, SC=NA, OA=NA, URL=NA, DB="DIMENSIONS",
                    AU_UN=NA, AU1_UN=NA, AU_CO=NA, AU1_CO=NA, SR_FULL=NA,  stringsAsFactors = FALSE)
   
-  pb <- txtProgressBar(min = 1, max = n, initial = 1, char = "=")
+  pb <- utils::txtProgressBar(min = 1, max = n, initial = 1, char = "=")
   
   for (i in 1:n) {
     #if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
     #print(i)
-    setTxtProgressBar(pb, i)
+    utils::setTxtProgressBar(pb, i)
     if (P[[i]]$type %in% c("article", "chapter")){
       a <- list2char(P[[i]])
       
@@ -285,12 +286,12 @@ patents2df <- function(P){
   df <- data.frame(title=rep(NA,n), assignee=NA, year=NA, date=NA, exp_date=NA, assignee_country=NA, assignee_city=NA, category=NA,
                    abstract=NA, cited_by=NA, patent_number=NA, jurisdiction=NA, status=NA, citing=NA, references=NA, TC=NA, stringsAsFactors = FALSE)
   
-  pb <- txtProgressBar(min = 1, max = n, initial = 1, char = "=")
+  pb <- utils::txtProgressBar(min = 1, max = n, initial = 1, char = "=")
   
   for (i in 1:n) {
     #if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
     #print(i)
-    setTxtProgressBar(pb, i)
+    utils::setTxtProgressBar(pb, i)
     
     a <- list2char(P[[i]])
     items <- names(a)
@@ -376,12 +377,12 @@ grants2df <- function(P){
   df <- data.frame(title=rep(NA,n), investigator=NA, role=NA, affiliation=NA, start_year=NA, start_date=NA, end_date=NA, research_org=NA, research_org_country=NA, research_org_city=NA, category=NA,
                    concepts=NA, abstract=NA, funders=NA, grant_number=NA, project_number=NA, URL=NA, language=NA, funding_usd=NA, funding_eur=NA, stringsAsFactors = FALSE)
   
-  pb <- txtProgressBar(min = 1, max = n, initial = 1, char = "=")
+  pb <- utils::txtProgressBar(min = 1, max = n, initial = 1, char = "=")
   
   for (i in 1:n) {
     #if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
     #print(i)
-    setTxtProgressBar(pb, i)
+    utils::setTxtProgressBar(pb, i)
     
       a <- list2char(P[[i]])
       items <- names(a)
@@ -482,12 +483,12 @@ clinicaltrials2df <- function(P){
   df <- data.frame(title=rep(NA,n), start_year=NA, end_year=NA, start_date=NA, research_org=NA, research_org_country=NA, 
                    abstract=NA, registry=NA, id=NA, gender=NA, URL=NA, phase=NA, stringsAsFactors = FALSE)
   
-  pb <- txtProgressBar(min = 1, max = n, initial = 1, char = "=")
+  pb <- utils::txtProgressBar(min = 1, max = n, initial = 1, char = "=")
   
   for (i in 1:n) {
     #if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
     #print(i)
-    setTxtProgressBar(pb, i)
+    utils::setTxtProgressBar(pb, i)
     
     a <- list2char(P[[i]])
     items <- names(a)
@@ -554,12 +555,12 @@ policydocuments2df <- function(P){
   df <- data.frame(title=rep(NA,n), publisher=NA, year=NA, date_inserted=NA, publisher_country=NA, publisher_city=NA, publisher_type=NA, publisher_url=NA,
                    category=NA, source=NA, id=NA, URL=NA, stringsAsFactors = FALSE)
   
-  pb <- txtProgressBar(min = 1, max = n, initial = 1, char = "=")
+  pb <- utils::txtProgressBar(min = 1, max = n, initial = 1, char = "=")
   
   for (i in 1:n) {
     #if (i%%100==0 | i==n) cat("Documents converted  ",i,"of",n, "\n")
     #print(i)
-    setTxtProgressBar(pb, i)
+    utils::setTxtProgressBar(pb, i)
     
     a <- list2char(P[[i]])
     items <- names(a)
@@ -615,7 +616,6 @@ policydocuments2df <- function(P){
   return(df)
   
 }
-
 
 
 
