@@ -11,14 +11,14 @@ dsApiRequest(token, query, limit = 50000, verbose = FALSE)
 
 \item{query}{is a character. It contains a search query formulated using the DSL API language. A query can be automatically generated using the function \code{dsQueryBuild}.}
 
-\item{limit}{is numeric. It indicates the max numebr of records to download. limit cannot be higher than 50.000 (as stated by Dimensions rules).}
+\item{limit}{is numeric. It indicates the max number of records to download. limit cannot be higher than 50.000 (as stated by Dimensions rules).}
 
 \item{verbose}{is logical.}
 }
 \value{
-a list cointaining bibliographic data downloaded from Dimenbsions.
+a list cointaining bibliographic metadata downloaded from Dimensions.
 
-To obtain a free access to Dimenions API fro no commercial use, please visit: \href{https://ds.digital-science.com/NoCostAgreement}{https://ds.digital-science.com/NoCostAgreement}
+To obtain a free access to Dimenions API for no commercial use, please visit: \href{https://ds.digital-science.com/NoCostAgreement}{https://ds.digital-science.com/NoCostAgreement}
 
 For more extensive information about dimensions API, please visit: \href{https://www.dimensions.ai/dimensions-apis/}{https://www.dimensions.ai/dimensions-apis/}
 }

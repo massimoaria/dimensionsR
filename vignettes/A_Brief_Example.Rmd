@@ -1,15 +1,16 @@
-
-# dimensionsR
-
-<!-- badges: start -->
-<!-- badges: end -->
-
+---
+title: "dimensionsR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{dimensionsR: A brief example}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
 ## An R-package to gather bibliographic data from DS Dimenions.ai. 
 
 &nbsp;
 
-    The goal of dimensionsR is to gather metadata about publications, grants, 
-    and clinical trials from DS Dimensions using DSL API.
+    The goal of dimensionsR is to gather metadata about publications, grants, and clinical trials from DS Dimensions using DSL API.
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -145,9 +146,7 @@ Passing all these arguments to the function ***dsQueryBuild***, we obtain the fi
                       
     query
     
-    # "search publications in title_abstract_only  for \"\\\"bibliometric*\\\"\" where year 
-    in [ 1980 : 2020 ] and type in [ \"article\" ] and (category_for.name ~\"management\") 
-    return publications[all]"
+    # "search publications in title_abstract_only  for \"\\\"bibliometric*\\\"\" where year in [ 1980 : 2020 ] and type in [ \"article\" ] and (category_for.name ~\"management\") return publications[all]"
 
 
 &nbsp; 
@@ -396,6 +395,3 @@ Then, we use the biblioAnalysis and summary functions to perform a descriptive a
     # 9      APPROACH                   287  APPROACH                   287
     # 10     AUTHORS                    284  AUTHORS                    284
 
-
-
-"# dimensionsR" 

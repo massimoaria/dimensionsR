@@ -16,7 +16,7 @@ dsQueryBuild(
 )
 }
 \arguments{
-\item{item}{is a character. It iindicates the record type contained in the json file. 
+\item{item}{is a character. It indicates the type of document to search. 
 The argument can be equal to \code{item = ("publications", "grants", "patents", "clinical_trials", "policy_documents")}. 
 Default value is \code{item = "publications"}.}
 
