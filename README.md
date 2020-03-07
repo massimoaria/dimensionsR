@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of Rdimensions is to gather metadata about publications, patents, grants, clinical trials and policy documents from DS Dimensions using DSL API
+The goal of dimensionsR is to gather metadata about publications, patents, grants, clinical trials and policy documents from DS Dimensions using DSL API
 
 
 ## Installation
