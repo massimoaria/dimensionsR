@@ -263,8 +263,10 @@ First, we install and load the bibliometrix package:
 
 ### Main information about the collection
 
-Then, we use the biblioAnalysis and summary functions to perform a descriptive analysis of the data frame:
+Then, we use the biblioAnalysis and summary functions to perform a descriptive analysis of the data frame: Then, we add some metadata to the dimensions collection, and we use the biblioAnalysis and summary functions to perform a descriptive analysis of the data frame:
 
+    M <- metaTagExtraction(M, "SR")
+    row.names(M) <- M$SR
 
     results <- biblioAnalysis(M)
     summary(results)
