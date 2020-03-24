@@ -29,22 +29,25 @@ It converts dimensions data, downloaded using DSL API, into a dataframe
 
 # Example 1: Querying a collection of publications
 
-# token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
-# query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
-#                        type = "article", categories = "management", 
-#                       start_year=1980,end_year = 2020)
-# D <- dsApiRequest(token = token, query = query, limit = 50000)
-# M <- dsApi2df(D)
+\dontrun{
+token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
+                       type = "article", categories = "management", 
+                       start_year=1980,end_year = 2020)
+D <- dsApiRequest(token = token, query = query, limit = 50000)
+M <- dsApi2df(D)
+}
 
+# Example 2: Querying a collection of grants
 
-# Example 2: Querying a colelction of grants
-
-# token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
-# query <- dsQueryBuild(item = "grants", words = "bibliometric*", 
-#                        type = "", categories = "management", 
-#                       start_year=1980,end_year = 2020)
-# D <- dsApiRequest(token = token, query = query, limit = 50000)
-# M <- dsApi2df(D)
+\dontrun{
+token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+query <- dsQueryBuild(item = "grants", words = "bibliometric*", 
+                       type = "", categories = "management", 
+                       start_year=1980,end_year = 2020)
+D <- dsApiRequest(token = token, query = query, limit = 50000)
+M <- dsApi2df(D)
+}
 
 }
 \seealso{

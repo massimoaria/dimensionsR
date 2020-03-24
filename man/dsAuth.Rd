@@ -25,7 +25,9 @@ It generates a token request to dimensions.ai using account and password.
 }
 \examples{
 
-#  token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+\dontrun{
+token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+}
 
 }
 \seealso{

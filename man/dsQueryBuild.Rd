@@ -45,9 +45,11 @@ It generates a valid query, written following the Dimensions Search Language (DS
 }
 \examples{
 
-# query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
-#                        type = "article", categories = "management", 
-#                       start_year=1980,end_year = 2020)
+\dontrun{
+query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
+                       type = "article", categories = "management", 
+                       start_year=1980,end_year = 2020)
+}
 
 }
 \seealso{

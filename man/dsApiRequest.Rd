@@ -28,11 +28,13 @@ The function \code{dsApiRequest} queries Dimensions using a DSL query formulated
 }
 \examples{
 
-# token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
-# query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
-#                        type = "article", categories = "management", 
-#                       start_year=1980,end_year = 2020)
-# D <- dsApiRequest(token = token, query = query, limit = 50000)
+\dontrun{
+token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
+                       type = "article", categories = "management", 
+                       start_year=1980,end_year = 2020)
+D <- dsApiRequest(token = token, query = query, limit = 50000)
+}
 
 }
 \seealso{

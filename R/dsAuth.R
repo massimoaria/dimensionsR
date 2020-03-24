@@ -14,7 +14,9 @@
 #'
 #' @examples
 #'
-#' #  token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+#' \dontrun{
+#' token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+#' }
 #'
 #' @seealso \code{\link{dsApiRequest}}
 #' @seealso \code{\link{dsQueryBuild}}

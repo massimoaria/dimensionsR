@@ -19,23 +19,26 @@
 #'
 #' # Example 1: Querying a collection of publications
 #' 
-#' # token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
-#' # query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
-#' #                        type = "article", categories = "management", 
-#' #                       start_year=1980,end_year = 2020)
-#' # D <- dsApiRequest(token = token, query = query, limit = 50000)
-#' # M <- dsApi2df(D)
+#' \dontrun{
+#' token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+#' query <- dsQueryBuild(item = "publications", words = "bibliometric*", 
+#'                        type = "article", categories = "management", 
+#'                        start_year=1980,end_year = 2020)
+#' D <- dsApiRequest(token = token, query = query, limit = 50000)
+#' M <- dsApi2df(D)
+#' }
 #'
+#' # Example 2: Querying a collection of grants
 #'
-#' # Example 2: Querying a colelction of grants
-#'
-#' # token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
-#' # query <- dsQueryBuild(item = "grants", words = "bibliometric*", 
-#' #                        type = "", categories = "management", 
-#' #                       start_year=1980,end_year = 2020)
-#' # D <- dsApiRequest(token = token, query = query, limit = 50000)
-#' # M <- dsApi2df(D)
-#'
+#' \dontrun{
+#' token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+#' query <- dsQueryBuild(item = "grants", words = "bibliometric*", 
+#'                        type = "", categories = "management", 
+#'                        start_year=1980,end_year = 2020)
+#' D <- dsApiRequest(token = token, query = query, limit = 50000)
+#' M <- dsApi2df(D)
+#' }
+#' 
 #' @seealso \code{\link{dsApiRequest}}
 #' @seealso \code{\link{dsAuth}}
 #' @seealso \code{\link{dsQueryBuild}}
@@ -97,7 +100,7 @@ pub2df <- function(P, format){
       df$TI[i] <- a["title"]
       
       ## Publication Year
-      df$PY <- a["year"]
+      df$PY[i] <- a["year"]
       
       ## Co-Authors
       AU_last_ind <- which(items == "authors.last_name")
