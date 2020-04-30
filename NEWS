@@ -1,8 +1,12 @@
 dimensionsR v0.0.2 
 ==============
 
+New functionality:
+* Added the function 'altmetric'. It gathers altmetric metadata from a list of DOIs using 'altmetric.com' API
+
 Changes:
-* Corrected the publication year assignment
+* Minor fixes
+
 
 
 

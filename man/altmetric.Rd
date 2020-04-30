@@ -12,7 +12,7 @@ altmetric(doi = "10.1016/j.joi.2017.08.007")
 \value{
 a data frame. Each row contains the full metadata record for each scholarly document.
 
-For more extensive information about Altmetric, please visit: \href{https://www.altmetric.com/}
+For more extensive information about Altmetric, please visit: https://www.altmetric.com
 }
 \description{
 It gathers altemtric metadata from a DOI using Altmetric API (www.altmetric.com).
@@ -28,6 +28,5 @@ doi = "10.1016/j.joi.2017.08.007"
 
 df <- altmetric(doi = doi)
 }
-
 
 }

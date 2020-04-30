@@ -102,21 +102,21 @@ pub2df <- function(P, format){
       ## Publication Year
       df$PY[i] <- a["year"]
       
-      ## Co-Authors
-      AU_last_ind <- which(regexpr("\\.last_name",items)>-1 & regexpr("_affiliation",items)>-1 & regexpr("author",items)>-1)
-      AU_first_ind <- which(regexpr("\\.first_name",items)>-1 & regexpr("_affiliation",items)>-1 & regexpr("author",items)>-1)
+      ### Co-Authors
+      AU_last_ind <- which(items == "authors.last_name")
+      AU_first_ind <- which(items == "authors.first_name")
       name <-  paste(a[AU_last_ind], a[AU_first_ind], sep=", ")
       df$AF[i] <- paste(name, collapse = ";")
       
       ## Countries
-      CO_ind <- which(regexpr("_affiliation",items)>-1 & regexpr("\\.countr",items)>-1 & regexpr("code",items)==-1)
+      CO_ind <- which(items == "authors.affiliations.country")
       country <- a[CO_ind]
       
       ## Affiliations
-      Aff_name_ind <- which(regexpr("_affiliation",items)>-1 & regexpr("\\.name",items)>-1)
+      Aff_name_ind <- which(items == "authors.affiliations.name")
       Affiliations <- a[Aff_name_ind]
       
-      Aff_city_ind <- which(regexpr("_affiliation",items)>-1 & regexpr("\\.city",items)>-1 & regexpr("_id",items)==-1)
+      Aff_city_ind <- which(items == "authors.affiliations.city")
       city <- a[Aff_city_ind]
       
       df$C1[i] <- paste(Affiliations, country, sep=", ", collapse=";")

@@ -10,8 +10,8 @@
 #'
 #' @return a data frame. Each row contains the full metadata record for each scholarly document.
 #' 
-#' For more extensive information about Altmetric, please visit: \href{https://www.altmetric.com/}
-#'
+#' For more extensive information about Altmetric, please visit: https://www.altmetric.com
+#' 
 #' @examples
 #'
 #' \dontrun{
@@ -19,14 +19,13 @@
 #' 
 #' df <- altmetric(doi = doi)
 #' }
-#' 
 #'
 #' @export
 #'
 altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
   
   start <- 0
-  pb <- utils::txtProgressBar(min = 1, max = n, initial = 1, char = "=")
+  pb <- utils::txtProgressBar(min = 1, max = length(doi), initial = 1, char = "=")
   for (i in 1:length(doi)){
     utils::setTxtProgressBar(pb, i)
     
@@ -57,7 +56,8 @@ altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
   }
   data["doi"] <- doi
   data$score <- as.numeric(data$score)
-  row.names(data) <- doi
+  #row.names(data) <- doi
+  row.names(data) <- NULL
   
   close(pb)
   
