@@ -5,7 +5,8 @@
 #'
 #' @param token is a character. It contains a valid token to query Dimensions database through DSL API. The token can be obtain using the function \code{dsAuth} with valid credentials (account and password) .
 #' @param query is a character. It contains a search query formulated using the DSL API language. A query can be automatically generated using the function \code{dsQueryBuild}.
-#' @param limit is numeric. It indicates the max number of records to download. limit cannot be higher than 50.000 (as stated by Dimensions rules).
+#' @param step is integer. It indicates the number of records to download at each API request. Default is \code{step = 100}.
+#' @param limit is integer. It indicates the max number of records to download. limit cannot be higher than 50.000 (as stated by Dimensions rules).
 #' @param verbose is logical.
 #'
 #' @return a list cointaining bibliographic metadata downloaded from Dimensions.
@@ -30,9 +31,9 @@
 #' 
 #' @export
 
-dsApiRequest <- function(token, query, limit = 50000, verbose = FALSE){
+dsApiRequest <- function(token, query, step = 100, limit = 50000, verbose = FALSE){
 
-  l <- 1000
+  l <- step
   s <- 0
   stop <-  FALSE
   ds.limit <- 50000
@@ -96,7 +97,7 @@ dsApiRequest <- function(token, query, limit = 50000, verbose = FALSE){
       stop <- TRUE
     } else{
       #print(Q)
-      s <- s + 1000
+      s <- s + l
       if ((s+l) > limit){
         l <- limit-s
       }

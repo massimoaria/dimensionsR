@@ -4,14 +4,16 @@
 \alias{dsApiRequest}
 \title{Gather bibliographic records using Digital Science Dimensions API}
 \usage{
-dsApiRequest(token, query, limit = 50000, verbose = FALSE)
+dsApiRequest(token, query, step = 100, limit = 50000, verbose = FALSE)
 }
 \arguments{
 \item{token}{is a character. It contains a valid token to query Dimensions database through DSL API. The token can be obtain using the function \code{dsAuth} with valid credentials (account and password) .}
 
 \item{query}{is a character. It contains a search query formulated using the DSL API language. A query can be automatically generated using the function \code{dsQueryBuild}.}
 
-\item{limit}{is numeric. It indicates the max number of records to download. limit cannot be higher than 50.000 (as stated by Dimensions rules).}
+\item{step}{is integer. It indicates the number of records to download at each API request. Default is \code{step = 100}.}
+
+\item{limit}{is integer. It indicates the max number of records to download. limit cannot be higher than 50.000 (as stated by Dimensions rules).}
 
 \item{verbose}{is logical.}
 }
