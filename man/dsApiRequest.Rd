@@ -4,10 +4,19 @@
 \alias{dsApiRequest}
 \title{Gather bibliographic records using Digital Science Dimensions API}
 \usage{
-dsApiRequest(token, query, step = 100, limit = 50000, verbose = FALSE)
+dsApiRequest(
+  token,
+  endpoint = "https://app.dimensions.ai/api/dsl.json",
+  query,
+  step = 100,
+  limit = 50000,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{token}{is a character. It contains a valid token to query Dimensions database through DSL API. The token can be obtain using the function \code{dsAuth} with valid credentials (account and password) .}
+
+\item{endpoint}{is a character. It contains the endpoint url of Dimensions API. Default is endpoint = "https://app.dimensions.ai/api/dsl.json".}
 
 \item{query}{is a character. It contains a search query formulated using the DSL API language. A query can be automatically generated using the function \code{dsQueryBuild}.}
 

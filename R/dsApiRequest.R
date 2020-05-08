@@ -4,6 +4,7 @@
 #' The function \code{dsApiRequest} queries Dimensions using a DSL query formulated through the function \code{dsQueryBuild}.
 #'
 #' @param token is a character. It contains a valid token to query Dimensions database through DSL API. The token can be obtain using the function \code{dsAuth} with valid credentials (account and password) .
+#' @param endpoint is a character. It contains the endpoint url of Dimensions API. Default is endpoint = "https://app.dimensions.ai/api/dsl.json".
 #' @param query is a character. It contains a search query formulated using the DSL API language. A query can be automatically generated using the function \code{dsQueryBuild}.
 #' @param step is integer. It indicates the number of records to download at each API request. Default is \code{step = 100}.
 #' @param limit is integer. It indicates the max number of records to download. limit cannot be higher than 50.000 (as stated by Dimensions rules).
@@ -31,7 +32,7 @@
 #' 
 #' @export
 
-dsApiRequest <- function(token, query, step = 100, limit = 50000, verbose = FALSE){
+dsApiRequest <- function(token, endpoint = "https://app.dimensions.ai/api/dsl.json", query, step = 100, limit = 50000, verbose = FALSE){
 
   l <- step
   s <- 0
@@ -62,7 +63,7 @@ dsApiRequest <- function(token, query, step = 100, limit = 50000, verbose = FALS
     if (isTRUE(verbose)) {
       d <-
         POST(
-          "https:///app.dimensions.ai/api/dsl.json",
+          endpoint,
           add_headers(Authorization = paste0("JWT ", token)),
           body = Q,
           encode = "json",
@@ -71,7 +72,7 @@ dsApiRequest <- function(token, query, step = 100, limit = 50000, verbose = FALS
     } else{
       d <-
         POST(
-          "https:///app.dimensions.ai/api/dsl.json",
+          endpoint,
           add_headers(Authorization = paste0("JWT ", token)),
           body = Q,
           encode = "json"

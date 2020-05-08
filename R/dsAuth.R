@@ -2,8 +2,9 @@
 #' 
 #' It generates a token request to dimensions.ai using account and password.
 #'
-#' @param username is a character.
+#' @param username is a character. 
 #' @param password is a character.
+#' @param auth_endpoint is a character. It contains the authentication endpoint url of Dimensions. Default is auth_endpoint = "https://app.dimensions.ai/api/auth.json"
 #' @param verbose is logical.
 #'
 #' @return a character cointaining an token o use dimensions API.
@@ -26,7 +27,7 @@
 #' @import httr
 #' @import jsonlite
 
-dsAuth <- function(username, password, verbose=FALSE) {
+dsAuth <- function(username, password, auth_endpoint = "https://app.dimensions.ai/api/auth.json", verbose=FALSE) {
 
   login <-
     list(username = username,
@@ -37,7 +38,7 @@ dsAuth <- function(username, password, verbose=FALSE) {
     r <-
       r <-
       POST(
-        "https://app.dimensions.ai/api/auth.json",
+        auth_endpoint,
         body = login,
         encode = "json",
         verbose()
@@ -45,7 +46,8 @@ dsAuth <- function(username, password, verbose=FALSE) {
 
   } else {
     r <-
-      POST("https://app.dimensions.ai/api/auth.json",
+      POST(
+        auth_endpoint,
            body = login,
            encode = "json")
   }

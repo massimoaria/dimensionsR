@@ -4,12 +4,19 @@
 \alias{dsAuth}
 \title{Obtain an API token from dimensions.ai}
 \usage{
-dsAuth(username, password, verbose = FALSE)
+dsAuth(
+  username,
+  password,
+  auth_endpoint = "https://app.dimensions.ai/api/auth.json",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{username}{is a character.}
 
 \item{password}{is a character.}
+
+\item{auth_endpoint}{is a character. It contains the authentication endpoint url of Dimensions. Default is auth_endpoint = "https://app.dimensions.ai/api/auth.json"}
 
 \item{verbose}{is logical.}
 }
