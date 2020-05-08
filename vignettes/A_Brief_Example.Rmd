@@ -134,6 +134,10 @@ To write that query, we should set the function arguments as following:
     
     **end_year = 2020**
 
+- *and finally, export the following fields*
+
+    **output_fields = c("basics", "extras", "authors", "concepts")**
+    (you should also export all database fields setting output_fields = "all")
 
 Passing all these arguments to the function ***dsQueryBuild***, we obtain the final query:
 
@@ -142,13 +146,14 @@ Passing all these arguments to the function ***dsQueryBuild***, we obtain the fi
                       words = "bibliometric*", 
                       type = "article", 
                       categories = "management", 
-                      start_year = 1980, end_year = 2020)
+                      start_year = 1980, end_year = 2020,
+                      output_fields = c("basics", "extras", "authors"))
                       
     query
     
-    # "search publications in title_abstract_only  for \"\\\"bibliometric*\\\"\" where year in [ 1980 : 2020 ] and type in [ \"article\" ] and (category_for.name ~\"management\") return publications[all]"
+    # "search publications in title_abstract_only  for \"\\\"bibliometric*\\\"\" where year in [ 1980 : 2020 ] and type in [ \"article\" ] and (category_for.name ~\"management\") return publications[type + basics + extras + authors + concepts]"
 
-
+A complete list of output items is available at https://docs.dimensions.ai/dsl/data-sources.html
 &nbsp; 
 
 ## Third step: Check the effectiveness of the query
@@ -162,7 +167,7 @@ To do that, we use the function dsApiRequest, setting the argument limit = 0:
 
     res$total_count
 
-    # [1] 1084
+    # [1] 1148
 
 
 &nbsp; 
@@ -171,13 +176,17 @@ To do that, we use the function dsApiRequest, setting the argument limit = 0:
 
 We could decide to change the query or continue to download the whole collection or a part of it (setting the limit argument lower than res$total_count).
 
-Image, we decided to download the whole collection composed by 1084 documents:
+Image, we decided to download the whole collection composed by 1148 documents:
 
 
-    D <- dsApiRequest(token = token, query = query, limit = res$total_count)
+    D <- dsApiRequest(token = token, query = query, step = 200, limit = res$total_count)
 
-    # Records:  1000 of 1084 
-    # Records:  1084 of 1084 
+    # Records:  200 of 1148 
+    # Records:  400 of 1148 
+    # Records:  600 of 1148 
+    # Records:  800 of 1148 
+    # Records:  1000 of 1148 
+    # Records:  1148 of 1148 
 
 
 The function dsApiRequest returns a list D composed by 4 objects:
@@ -205,7 +214,7 @@ Finally, we transform the xml-structured object D into a data frame, with cases 
 
     str(M)
 
-    'data.frame':	1084 obs. of  36 variables:
+    'data.frame':	1148 obs. of  36 variables:
     # $ AU     : chr  "DUQUE-ACEVEDO M;BELMONTE-UREÑA LJ;CORTÉS-GARCÍA FJ;CAMACHO-FERRE F" "SINGH S;DHIR S;DAS VM;SHARMA A" "FARINHA L;SEBASTIÃO JR;SAMPAIO C;LOPES J" "BILDOSOLA I;GARECHANA G;ZARRABEITIA E;CILLERUELO E" ...
     # $ AF     : chr  "DUQUE-ACEVEDO, MÓNICA;BELMONTE-UREÑA, LUIS J.;CORTÉS-GARCÍA, FRANCISCO JOAQUÍN;CAMACHO-FERRE, FRANCISCO" "SINGH, SHIWANGI;DHIR, SANJAY;DAS, V. MUKUNDA;SHARMA, ANUJ" "FARINHA, LUÍS;SEBASTIÃO, JOÃO RENATO;SAMPAIO, CARLOS;LOPES, JOÃO" "BILDOSOLA, IÑAKI;GARECHANA, GAIZKA;ZARRABEITIA, ENARA;CILLERUELO, ERNESTO" ...
     # $ TI     : chr  "AGRICULTURAL WASTE: REVIEW OF THE EVOLUTION, APPROACHES AND PERSPECTIVES ON ALTERNATIVE USES" "BIBLIOMETRIC OVERVIEW OF THE TECHNOLOGICAL FORECASTING AND SOCIAL CHANGE JOURNAL: ANALYSIS FROM 1970 TO 2018" "SOCIAL INNOVATION AND SOCIAL ENTREPRENEURSHIP: DISCOVERING ORIGINS, EXPLORING CURRENT AND FUTURE TRENDS" "CHARACTERIZATION OF STRATEGIC EMERGING TECHNOLOGIES: THE CASE OF BIG DATA" ...
@@ -265,135 +274,176 @@ First, we install and load the bibliometrix package:
 
 Then, we use the biblioAnalysis and summary functions to perform a descriptive analysis of the data frame: Then, we add some metadata to the dimensions collection, and we use the biblioAnalysis and summary functions to perform a descriptive analysis of the data frame:
 
-    M <- metaTagExtraction(M, "SR")
-    row.names(M) <- M$SR
+    M <- convert2df(D, dbsource = "dimensions", format = "api")
 
     results <- biblioAnalysis(M)
     summary(results)
 
-    # Main Information about data
-    
-    #  Documents                             1084 
-    #  Sources (Journals, Books, etc.)       545 
-    #  Keywords Plus (ID)                    12335 
-    #  Author's Keywords (DE)                12335 
-    #  Period                                1982 - 1982 
-    #  Average citations per documents       19.42 
-    
-    #  Authors                               2623 
-    #  Author Appearances                    3315 
-    #  Authors of single-authored documents  132 
-    #  Authors of multi-authored documents   2491 
-    #  Single-authored documents             140 
-
-    #  Documents per Author                  0.413 
-    #  Authors per Document                  2.42 
-    #  Co-Authors per Documents              3.06 
-    #  Collaboration Index                   2.65 
-
-    #  Document types                     
-    #  ARTICLE      1084 
-
-
-    # Annual Scientific Production
-
-    #  Year    Articles
-    #     1982     1084
-
-    # Annual Percentage Growth Rate 0 
-
-
-    # Most Productive Authors
-
-    #       Authors        Articles Authors        Articles Fractionalized
-    # 1     MERIGÓ JM         20    MERIGÓ JM                      5.43
-    # 2     ZHANG Y           11    KOSTOFF RN                     3.69
-    # 3     KOSTOFF RN        10    MCMILLAN GS                    3.33
-    # 4     PORTER AL         10    HO Y                           3.25
-    # 5     WANG J            10    VOGEL R                        3.17
-    # 6     CAPUTO A           9    FERREIRA MP                    3.00
-    # 7     KUMAR S            9    PASADEOS Y                     3.00
-    # 8     MARZI G            9    ZHANG Y                        2.77
-    # 9     FERREIRA MP        8    KUMAR S                        2.75
-    # 10    WANG Y             8    PORTER AL                      2.74
-
-
-    # Top manuscripts per citations
-
-    #                                                     Paper            TC TCperYear
-    # 1  PARK SH, 1982, STRATEGIC MANAGEMENT JOURNAL                     1011     25.92
-    # 2  RAMOS-RODRÍGUEZ A, 1982, STRATEGIC MANAGEMENT JOURNAL            454     11.64
-    # 3  DAIM TU, 1982, TECHNOLOGICAL FORECASTING AND SOCIAL CHANGE       450     11.54
-    # 4  DE BAKKER FGA, 1982, BUSINESS & SOCIETY-a                        348      8.92
-    # 5  KOSTOFF RN, 1982, IEEE TRANSACTIONS ON ENGINEERING MANAGEMENT    347      8.90
-    # 6  FAHIMNIA B, 1982, INTERNATIONAL JOURNAL OF PRODUCTION ECONOMICS  338      8.67
-    # 7  MURRAY F, 1982, RESEARCH POLICY                                  298      7.64
-    # 8  MOED H, 1982, RESEARCH POLICY-a                                  280      7.18
-    # 9  ZUPIC I, 1982, ORGANIZATIONAL RESEARCH METHODS                   256      6.56
-    # 10 PODSAKOFF PM, 1982, JOURNAL OF MANAGEMENT                        213      5.46
-
-
-    # Corresponding Author's Countries
-
-    #           Country Articles   Freq SCP MCP MCP_Ratio
-    # 1  CHINA                49 0.1441  24  25     0.510
-    # 2  UNITED STATES        49 0.1441  28  21     0.429
-    # 3  SPAIN                39 0.1147  28  11     0.282
-    # 4  BRAZIL               22 0.0647  16   6     0.273
-    # 5  ITALY                20 0.0588  13   7     0.350
-    # 6  UNITED KINGDOM       19 0.0559   8  11     0.579
-    # 7  AUSTRALIA            18 0.0529   8  10     0.556
-    # 8  NETHERLANDS          15 0.0441  12   3     0.200
-    # 9  GERMANY              12 0.0353  10   2     0.167
-    # 10 PORTUGAL             12 0.0353   6   6     0.500
-
-
-    # SCP: Single Country Publications
-
-    # MCP: Multiple Country Publications
-
-
-    # Total Citations per Country
-
-    #              Country      Total Citations Average Article Citations
-    # 1  UNITED STATES                     2265                     46.22
-    # 2  CHINA                             1166                     23.80
-    # 3  AUSTRALIA                          833                     46.28
-    # 4  UNITED KINGDOM                     721                     37.95
-    # 5  NETHERLANDS                        705                     47.00
-    # 6  SPAIN                              665                     17.05
-    # 7  BRAZIL                             468                     21.27
-    # 8  ITALY                              422                     21.10
-    # 9  FINLAND                            325                     46.43
-    # 10 JAPAN                              204                     29.14
-
-
-    # Most Relevant Sources
-
-    #                                     Sources        Articles
-    # 1  TECHNOLOGICAL FORECASTING AND SOCIAL CHANGE           47
-    # 2  RESEARCH POLICY                                       44
-    # 3  TECHNOLOGY ANALYSIS AND STRATEGIC MANAGEMENT          24
-    # 4  JOURNAL OF BUSINESS RESEARCH                          23
-    # 5  TECHNOVATION                                          14
-    # 6  INTERNATIONAL JOURNAL OF HOSPITALITY MANAGEMENT       10
-    # 7  THE JOURNAL OF TECHNOLOGY TRANSFER                    10
-    # 8  R AND D MANAGEMENT                                     9
-    # 9  INDUSTRIAL MARKETING MANAGEMENT                        8
-    # 10 MANAGEMENT DECISION                                    8
-
-
-    # Most Relevant Keywords
-
-    #    Author Keywords (DE)      Articles Keywords-Plus (ID)     Articles
-    # 1      RESEARCH                   639  RESEARCH                   639
-    # 2      ANALYSIS                   637  ANALYSIS                   637
-    # 3      STUDY                      416  STUDY                      416
-    # 4      PAPER                      399  PAPER                      399
-    # 5      ARTICLE                    381  ARTICLE                    381
-    # 6      BIBLIOMETRIC ANALYSIS      373  BIBLIOMETRIC ANALYSIS      373
-    # 7      LITERATURE                 358  LITERATURE                 358
-    # 8      JOURNALS                   300  JOURNALS                   300
-    # 9      APPROACH                   287  APPROACH                   287
-    # 10     AUTHORS                    284  AUTHORS                    284
-
+        # MAIN INFORMATION ABOUT DATA
+        # 
+        # Timespan                              1982 : 2020 
+        # Sources (Journals, Books, etc)        568 
+        # Documents                             1148 
+        # Average years from publication        4.81 
+        # Average citations per documents       19.54 
+        # Average citations per year per doc    2.876 
+        # References                            0 
+        # 
+        # DOCUMENT TYPES                     
+        # article      1148 
+        # 
+        # DOCUMENT CONTENTS
+        # Keywords Plus (ID)                    12874 
+        # Author's Keywords (DE)                12874 
+        #  
+        # AUTHORS
+        #  Authors                               2783 
+        #  Author Appearances                    3538 
+        #  Authors of single-authored documents  140 
+        #  Authors of multi-authored documents   2643 
+        #  
+        # AUTHORS COLLABORATION
+        #  Single-authored documents             148 
+        #  Documents per Author                  0.413 
+        #  Authors per Document                  2.42 
+        #  Co-Authors per Documents              3.08 
+        #  Collaboration Index                   2.66 
+        #  
+        # 
+        # Annual Scientific Production
+        # 
+        #  Year    Articles
+        #     1982        1
+        #     1983        1
+        #     1985        2
+        #     1986        1
+        #     1987        3
+        #     1988        4
+        #     1989        1
+        #     1990        2
+        #     1992        3
+        #     1993        3
+        #     1994        3
+        #     1995        5
+        #     1996        4
+        #     1997        3
+        #     1998        4
+        #     1999       10
+        #     2000        3
+        #     2001        8
+        #     2002        6
+        #     2003        1
+        #     2004        4
+        #     2005       10
+        #     2006       17
+        #     2007       13
+        #     2008       13
+        #     2009       16
+        #     2010       22
+        #     2011       32
+        #     2012       32
+        #     2013       48
+        #     2014       37
+        #     2015       68
+        #     2016       85
+        #     2017      108
+        #     2018      147
+        #     2019      283
+        #     2020      145
+        # 
+        # Annual Percentage Growth Rate 13.99298 
+        # 
+        # 
+        # Most Productive Authors
+        # 
+        #    Authors        Articles Authors        Articles Fractionalized
+        # 1     MERIGÓ JM         20    MERIGÓ JM                      5.43
+        # 2     ZHANG Y           14    KUMAR S                        4.08
+        # 3     KUMAR S           13    KOSTOFF RN                     3.69
+        # 4     PORTER AL         11    ZHANG Y                        3.47
+        # 5     KOSTOFF RN        10    MCMILLAN GS                    3.33
+        # 6     WANG J            10    HO Y                           3.25
+        # 7     CAPUTO A           9    VOGEL R                        3.17
+        # 8     MARZI G            9    FERREIRA MP                    3.00
+        # 9     ALON I             8    PASADEOS Y                     3.00
+        # 10    FERREIRA MP        8    PORTER AL                      2.94
+        # 
+        # 
+        # Top manuscripts per citations
+        # 
+        #                                                     Paper            TC TCperYear
+        # 1  PARK SH, 1996, STRATEGIC MANAGEMENT JOURNAL                     1011     40.44
+        # 2  RAMOS‐RODRÍGUEZ A, 2004, STRATEGIC MANAGEMENT JOURNAL            472     27.76
+        # 3  DAIM TU, 2006, TECHNOLOGICAL FORECASTING AND SOCIAL CHANGE       461     30.73
+        # 4  FAHIMNIA B, 2015, INTERNATIONAL JOURNAL OF PRODUCTION ECONOMICS  368     61.33
+        # 5  DE BAKKER FGA, 2005, BUSINESS & SOCIETY                          359     22.44
+        # 6  KOSTOFF RN, 2001, IEEE TRANSACTIONS ON ENGINEERING MANAGEMENT    351     17.55
+        # 7  MURRAY F, 2002, RESEARCH POLICY                                  300     15.79
+        # 8  ZUPIC I, 2015, ORGANIZATIONAL RESEARCH METHODS                   296     49.33
+        # 9  MOED H, 1985, RESEARCH POLICY                                    283      7.86
+        # 10 GALVAGNO M, 2014, MANAGING SERVICE QUALITY                       222     31.71
+        # 
+        # 
+        # Corresponding Author's Countries
+        # 
+        # Country Articles   Freq SCP MCP MCP_Ratio
+        # 1  UNITED STATES       116 0.1420  79  37     0.319
+        # 2  CHINA               104 0.1273  57  47     0.452
+        # 3  BRAZIL               79 0.0967  61  18     0.228
+        # 4  SPAIN                69 0.0845  48  21     0.304
+        # 5  UNITED KINGDOM       49 0.0600  31  18     0.367
+        # 6  ITALY                47 0.0575  34  13     0.277
+        # 7  AUSTRALIA            45 0.0551  22  23     0.511
+        # 8  GERMANY              34 0.0416  25   9     0.265
+        # 9  PORTUGAL             24 0.0294  16   8     0.333
+        # 10 NETHERLANDS          22 0.0269  17   5     0.227
+        # 
+        # 
+        # SCP: Single Country Publications
+        # 
+        # MCP: Multiple Country Publications
+        # 
+        # 
+        # Total Citations per Country
+        # 
+        # Country      Total Citations Average Article Citations
+        # 1  UNITED STATES                     4936                    42.552
+        # 2  UNITED KINGDOM                    1654                    33.755
+        # 3  SPAIN                             1618                    23.449
+        # 4  CHINA                             1472                    14.154
+        # 5  AUSTRALIA                         1416                    31.467
+        # 6  NETHERLANDS                       1252                    56.909
+        # 7  BRAZIL                             985                    12.468
+        # 8  ITALY                              890                    18.936
+        # 9  GERMANY                            662                    19.471
+        # 10 FINLAND                            559                    50.818
+        # 
+        # 
+        # Most Relevant Sources
+        # 
+        # Sources        Articles
+        # 1  TECHNOLOGICAL FORECASTING AND SOCIAL CHANGE           48
+        # 2  RESEARCH POLICY                                       44
+        # 3  JOURNAL OF BUSINESS RESEARCH                          24
+        # 4  TECHNOLOGY ANALYSIS AND STRATEGIC MANAGEMENT          24
+        # 5  TECHNOVATION                                          14
+        # 6  INDUSTRIAL MARKETING MANAGEMENT                       11
+        # 7  INTERNATIONAL JOURNAL OF HOSPITALITY MANAGEMENT       10
+        # 8  THE JOURNAL OF TECHNOLOGY TRANSFER                    10
+        # 9  IEEE TRANSACTIONS ON ENGINEERING MANAGEMENT            9
+        # 10 R AND D MANAGEMENT                                     9
+        # 
+        # 
+        # Most Relevant Keywords
+        # 
+        # Author Keywords (DE)      Articles Keywords-Plus (ID)     Articles
+        # 1      RESEARCH                   683  RESEARCH                   683
+        # 2      ANALYSIS                   678  ANALYSIS                   678
+        # 3      STUDY                      442  STUDY                      442
+        # 4      PAPER                      428  PAPER                      428
+        # 5      ARTICLE                    406  ARTICLE                    406
+        # 6      BIBLIOMETRIC ANALYSIS      398  BIBLIOMETRIC ANALYSIS      398
+        # 7      LITERATURE                 376  LITERATURE                 376
+        # 8      JOURNALS                   320  JOURNALS                   320
+        # 9      APPROACH                   307  APPROACH                   307
+        # 10     AUTHORS                    299  AUTHORS                    299

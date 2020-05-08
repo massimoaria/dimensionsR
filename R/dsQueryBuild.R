@@ -4,12 +4,14 @@
 #' @param item is a character. It indicates the type of document to search. 
 #' The argument can be equal to \code{item = ("publications", "grants", "patents", "clinical_trials", "policy_documents")}. 
 #' Default value is \code{item = "publications"}.
-#' @param words is a character. It contains the search terms.
+#' @param words is a character vector. It contains the search terms.
+#' @param words_boolean_op is character. It indicates which boolean operator have to be used to link words. It can be c("OR","AND"). Default is "OR".
 #' @param full.search is logical. If TRUE, full-text search finds all instances of a term (keyword) in a document, or group of documents. If False, the search finds all instances in titles and abstracts only.
 #' @param type is a character. It indicates the document type to include in the search. Default is \code{type = "article"}.
-#' @param categories is a character. It indicates the research categories to include in the search. If empty \code{categories = ""}, all categories will be included in the search.
+#' @param categories is a character vector. It indicates the research categories to include in the search. If empty \code{categories = ""}, all categories will be included in the search.
 #' @param start_year is integer. It indicate the starting publication year of the search timespan.
 #' @param end_year is integer. It indicate the ending publication year of the search timespan.
+#' @param output_fields is a character vector. It contains a list of fields which have to exported. Default is "all".
 #'
 #' @return a character containing the query in DSL format.
 #'
@@ -31,14 +33,30 @@
 #'
 #' @export
 #'
-dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.search=FALSE, type = "article", categories = "", start_year =NULL, end_year=NULL){
+dsQueryBuild <- function(item = "publications", words = "bibliometric*", 
+                         words_boolean_op = "OR", full.search=FALSE, 
+                         type = "article", categories = "", 
+                         output_fields = "all",
+                         start_year =NULL, end_year=NULL){
 
   # item
+  if (!(item %in% c("publications", "grants", "patents", "clinical trials"))){
+    cat("\nThe argument 'item' is not correct.\n
+Please, choose an item from the following set:
+'publications'\n'patents'\n'clinical_trials'\n'policy_documents'\n")
+  return()}
   # item = c("publications", "grants", "patents", "clinical trials")
 
   # search terms
-  words_query <- paste0(' for "\\"', words, '\\""')
-
+  
+  words.boolean.op <- toupper(paste0(" ",words_boolean_op," "))
+  
+  #words_query <- paste0(' for ',paste0('"\\"', words, '\\""', collapse=words.boolean.op))
+  words_query <- paste0(' for \"',paste0('\\"', words, '\\"', collapse=words_boolean_op),'\"')
+  
+  
+  # \"\\\"nano*\\\" AND \\\"drug delivery\\\"\"
+  
   #search type
   if (isTRUE(full.search)) {
     search_type <- " in full_data "
@@ -85,8 +103,8 @@ dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.se
   # partuial matching '~'
   # categories = "management; economics"
 
-  if (nchar(categories) > 0) {
-    a <- trimws(unlist(strsplit(categories, ";")))
+  if (nchar(categories[1]) > 0) {
+    a <- trimws(categories)
     filter_category <-
       paste('category_for.name ~\"',
             a,
@@ -106,8 +124,10 @@ dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.se
     filter_type <- paste('type in [', a, ']')
   } 
 
-
-  return_item = paste0(item, "[all]")
+  if (nchar(output_fields[1])<1) output_fields <- "all"
+  if (item == "publications") {item_type <- "type + "}else{item_type <- ""}
+  return_fields <- paste0("[",item_type, paste0(output_fields, collapse = " + "),"]")
+  return_item = paste0(item, return_fields)
 
   #step_query <- ' limit 1000 skip 0'
   
@@ -122,7 +142,7 @@ dsQueryBuild <- function(item = "publications", words = "bibliometric*", full.se
                      filter_type)
   }
   
-  if (nchar(categories) > 0) {
+  if (nchar(categories[1]) > 0) {
     query <-  paste0(query,
                      ' and (',
                      filter_category,
