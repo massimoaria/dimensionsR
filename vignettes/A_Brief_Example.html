@@ -309,7 +309,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <!-- badges: end -->
 <p> </p>
 <p><em><a href="http://github.com/massimoaria/dimensionsR" class="uri">http://github.com/massimoaria/dimensionsR</a></em></p>
-<p><em>Latest version: 0.0.2, 2020-05-08</em></p>
+<p><em>Latest version: 0.0.2, 2020-05-09</em></p>
 <p> </p>
 <p><strong>by Massimo Aria</strong></p>
 <p>Full Professor in Social Statistics</p>
@@ -375,7 +375,8 @@ devtools::install_github(&quot;massimoaria/dimensionsR&quot;)</code></pre>
 <p><strong>start_year = 2000</strong></p>
 <p><strong>end_year = 2020</strong></p></li>
 <li><p><em>and finally, export the following fields</em></p>
-<p><strong>output_fields = c(“basics”, “extras”, “authors”, “concepts”)</strong> (you should also export all database fields setting output_fields = “all”)</p></li>
+<p><strong>output_fields = c(“basics”, “extras”, “authors”, “concepts”)</strong></p>
+<p>(you could also export all database fields setting output_fields = “all”)</p></li>
 </ul>
 <p>Passing all these arguments to the function <strong><em>dsQueryBuild</em></strong>, we obtain the final query:</p>
 <pre><code>query &lt;- dsQueryBuild(item = &quot;publications&quot;, 
@@ -383,7 +384,7 @@ devtools::install_github(&quot;massimoaria/dimensionsR&quot;)</code></pre>
                   type = &quot;article&quot;, 
                   categories = &quot;management&quot;, 
                   start_year = 1980, end_year = 2020,
-                  output_fields = c(&quot;basics&quot;, &quot;extras&quot;, &quot;authors&quot;))
+                  output_fields = c(&quot;basics&quot;, &quot;extras&quot;, &quot;authors&quot;, &quot;concepts&quot;))
                   
 query
 

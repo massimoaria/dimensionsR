@@ -6,11 +6,11 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
-## An R-package to gather bibliographic data from DS Dimenions.ai. 
+## An R-package to gather bibliographic data from DS Dimenions.ai
 
 &nbsp;
 
-    The goal of dimensionsR is to gather metadata about publications, grants, and clinical trials from DS Dimensions using DSL API.
+    The goal of dimensionsR is to gather metadata about publications, grants, policy documents, and clinical trials from DS Dimensions using DSL API.
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -137,7 +137,8 @@ To write that query, we should set the function arguments as following:
 - *and finally, export the following fields*
 
     **output_fields = c("basics", "extras", "authors", "concepts")**
-    (you should also export all database fields setting output_fields = "all")
+    
+    (you could also export all database fields setting output_fields = "all")
 
 Passing all these arguments to the function ***dsQueryBuild***, we obtain the final query:
 
@@ -147,7 +148,7 @@ Passing all these arguments to the function ***dsQueryBuild***, we obtain the fi
                       type = "article", 
                       categories = "management", 
                       start_year = 1980, end_year = 2020,
-                      output_fields = c("basics", "extras", "authors"))
+                      output_fields = c("basics", "extras", "authors", "concepts"))
                       
     query
     

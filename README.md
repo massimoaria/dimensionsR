@@ -24,7 +24,6 @@
 
 *http://github.com/massimoaria/dimensionsR*
 
-*Latest version: `r packageVersion("dimensionsR")`, `r Sys.Date()`*
 
 &nbsp; 
 
