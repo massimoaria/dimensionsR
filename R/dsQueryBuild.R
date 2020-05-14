@@ -40,12 +40,12 @@ dsQueryBuild <- function(item = "publications", words = "bibliometric*",
                          start_year =NULL, end_year=NULL){
 
   # item
-  if (!(item %in% c("publications", "grants", "patents", "clinical trials"))){
+  if (!(item %in% c("publications", "grants", "patents", "clinical_trials", "policy_documents"))){
     cat("\nThe argument 'item' is not correct.\n
 Please, choose an item from the following set:
 'publications'\n'patents'\n'clinical_trials'\n'policy_documents'\n")
   return()}
-  # item = c("publications", "grants", "patents", "clinical trials")
+  # item = c("publications", "grants", "patents", "clinical_trials", "policy_documents")
 
   # search terms
   
