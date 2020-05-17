@@ -57,7 +57,7 @@ altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
       DD <- unlist(jsonlite::fromJSON(httr::content(d, "text", encoding = "UTF-8"), simplifyDataFrame = T))
      
       ## save metadata in a data frame
-        missItems <- setdiff(label,names(DD))
+        missItems <- unique(c(setdiff(label,names(DD)),setdiff(names(DD),label)))
         data[missItems]=NA
         lab <- names(DD)
         #items <- intersect(items,names(DD))
