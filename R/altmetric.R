@@ -24,25 +24,7 @@
 #'
 altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
   
-  label <- c("title","doi","altmetric_jid","issns","journal","cohorts.sci",
-             "cohorts.pub","cohorts.com","cohorts.doc","context.all.count",
-             "context.all.mean","context.all.rank","context.all.pct",
-             "context.all.higher_than","context.journal.count","context.journal.mean",
-             "context.journal.rank","context.journal.pct","context.journal.higher_than",
-             "context.similar_age_3m.count","context.similar_age_3m.mean",
-             "context.similar_age_3m.rank","context.similar_age_3m.pct",
-             "context.similar_age_3m.higher_than","context.similar_age_journal_3m.count",
-             "context.similar_age_journal_3m.mean","context.similar_age_journal_3m.rank",
-             "context.similar_age_journal_3m.pct","context.similar_age_journal_3m.higher_than",
-             "authors1","authors2","type","altmetric_id","schema","is_oa",
-             "publisher_subjects.name","publisher_subjects.scheme","cited_by_posts_count",
-             "cited_by_tweeters_count","cited_by_accounts_count","last_updated","score",
-             "history.1y","history.6m","history.3m","history.1m","history.1w","history.6d",
-             "history.5d","history.4d","history.3d","history.2d","history.1d","history.at",
-             "url","added_on","published_on","scopus_subjects1","scopus_subjects2",
-             "scopus_subjects3","scopus_subjects4","scopus_subjects5","readers.citeulike",
-             "readers.mendeley","readers.connotea","readers_count","images.small",
-             "images.medium","images.large","details_url")
+  label <- c("doi", "title")
   data <- data.frame(rbind(rep(NA,length(label))))
   names(data)=label
   start <- 0
@@ -63,6 +45,7 @@ altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
         #items <- intersect(items,names(DD))
         #data <- data[items]
         data[i,lab] <- data.frame(rbind(DD[lab]),stringsAsFactors = F)
+        label <- names(data)
       
     }else{
       #alt$score[i] <- NA
@@ -74,6 +57,7 @@ altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
   data$score <- as.numeric(data$score)
   #row.names(data) <- doi
   row.names(data) <- NULL
+  data <- data[sort(names(data))]
   
   close(pb)
   
