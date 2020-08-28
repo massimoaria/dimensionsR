@@ -18,9 +18,9 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -30,14 +30,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -46,9 +48,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -308,8 +310,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <!-- badges: start -->
 <!-- badges: end -->
 <p> </p>
-<p><em><a href="http://github.com/massimoaria/dimensionsR" class="uri">http://github.com/massimoaria/dimensionsR</a></em></p>
-<p><em>Latest version: 0.0.2, 2020-05-14</em></p>
+<p><em><a href="https://github.com/massimoaria/dimensionsR" class="uri">https://github.com/massimoaria/dimensionsR</a></em></p>
+<p><em>Latest version: 0.0.2, 2020-08-28</em></p>
 <p> </p>
 <p><strong>by Massimo Aria</strong></p>
 <p>Full Professor in Social Statistics</p>
@@ -333,7 +335,7 @@ devtools::install_github(&quot;massimoaria/dimensionsR&quot;)</code></pre>
 </div>
 <div id="load-the-package" class="section level2">
 <h2>Load the package</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">library</span>(dimensionsR)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">library</span>(dimensionsR)</span></code></pre></div>
 <p> </p>
 <p> </p>
 </div>
@@ -432,7 +434,7 @@ res$total_count
 
 str(M)
 
-'data.frame':   1148 obs. of  36 variables:
+&#39;data.frame&#39;:   1148 obs. of  36 variables:
 # $ AU     : chr  &quot;DUQUE-ACEVEDO M;BELMONTE-UREÑA LJ;CORTÉS-GARCÍA FJ;CAMACHO-FERRE F&quot; &quot;SINGH S;DHIR S;DAS VM;SHARMA A&quot; &quot;FARINHA L;SEBASTIÃO JR;SAMPAIO C;LOPES J&quot; &quot;BILDOSOLA I;GARECHANA G;ZARRABEITIA E;CILLERUELO E&quot; ...
 # $ AF     : chr  &quot;DUQUE-ACEVEDO, MÓNICA;BELMONTE-UREÑA, LUIS J.;CORTÉS-GARCÍA, FRANCISCO JOAQUÍN;CAMACHO-FERRE, FRANCISCO&quot; &quot;SINGH, SHIWANGI;DHIR, SANJAY;DAS, V. MUKUNDA;SHARMA, ANUJ&quot; &quot;FARINHA, LUÍS;SEBASTIÃO, JOÃO RENATO;SAMPAIO, CARLOS;LOPES, JOÃO&quot; &quot;BILDOSOLA, IÑAKI;GARECHANA, GAIZKA;ZARRABEITIA, ENARA;CILLERUELO, ERNESTO&quot; ...
 # $ TI     : chr  &quot;AGRICULTURAL WASTE: REVIEW OF THE EVOLUTION, APPROACHES AND PERSPECTIVES ON ALTERNATIVE USES&quot; &quot;BIBLIOMETRIC OVERVIEW OF THE TECHNOLOGICAL FORECASTING AND SOCIAL CHANGE JOURNAL: ANALYSIS FROM 1970 TO 2018&quot; &quot;SOCIAL INNOVATION AND SOCIAL ENTREPRENEURSHIP: DISCOVERING ORIGINS, EXPLORING CURRENT AND FUTURE TRENDS&quot; &quot;CHARACTERIZATION OF STRATEGIC EMERGING TECHNOLOGIES: THE CASE OF BIG DATA&quot; ...
@@ -503,7 +505,7 @@ summary(results)
     # 
     # DOCUMENT CONTENTS
     # Keywords Plus (ID)                    12874 
-    # Author's Keywords (DE)                12874 
+    # Author&#39;s Keywords (DE)                12874 
     #  
     # AUTHORS
     #  Authors                               2783 
@@ -593,7 +595,7 @@ summary(results)
     # 10 GALVAGNO M, 2014, MANAGING SERVICE QUALITY                       222     31.71
     # 
     # 
-    # Corresponding Author's Countries
+    # Corresponding Author&#39;s Countries
     # 
     # Country Articles   Freq SCP MCP MCP_Ratio
     # 1  UNITED STATES       116 0.1420  79  37     0.319
