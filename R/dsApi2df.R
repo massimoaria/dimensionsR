@@ -96,6 +96,8 @@ pub2df <- function(P, format){
       ## Document Type
       df$DT[i] <- a["type"]
       
+      df$AB[i] <- a["abstract"]
+      
       ## Title
       df$TI[i] <- a["title"]
       
