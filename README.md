@@ -98,9 +98,15 @@ The workflow mainly consists of five steps:
 
 The access to DS Dimensions API system (https://www.dimensions.ai/) requires an "API token". Dimensions provides free data access for scientometric research projects, but you have to submit a request to obtain valid credentials (to generate API tokens) at https://digital-science.ccgranttracker.com/.
 
-Once your request is approved, you can generate a valid token using the function ***dsAuth*** with your dimensions credentials: 
+Once your request is approved, you can generate a valid token using the function ***dsAuth*** with your dimensions credentials or your dimensions API key.
+
+### Token by Dimensions credentials:
 
     token <- dsAuth(username = "your_username", password = "your_password")
+
+### Token by Dimensions API key:
+
+    token <- dsAuth(key = "your_apikey")
 
 The token is temporary and needs to be generated again after a few hours. 
 

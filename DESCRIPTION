@@ -1,6 +1,6 @@
 Package: dimensionsR
 Title: Gathering Bibliographic Records from 'Digital Science Dimensions' Using 'DSL' API
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: 
     person(given = "Massimo",
            family = "Aria",
@@ -18,5 +18,5 @@ Imports:
     jsonlite
 Suggests: 
     bibliometrix, knitr, rmarkdown
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr

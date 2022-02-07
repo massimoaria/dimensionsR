@@ -5,8 +5,9 @@
 \title{Obtain an API token from dimensions.ai}
 \usage{
 dsAuth(
-  username,
-  password,
+  username = NULL,
+  password = NULL,
+  key = NULL,
   auth_endpoint = "https://app.dimensions.ai/api/auth.json",
   verbose = FALSE
 )
@@ -15,6 +16,8 @@ dsAuth(
 \item{username}{is a character.}
 
 \item{password}{is a character.}
+
+\item{key}{is a character.}
 
 \item{auth_endpoint}{is a character. It contains the authentication endpoint url of Dimensions. Default is auth_endpoint = "https://app.dimensions.ai/api/auth.json"}
 
@@ -32,8 +35,15 @@ It generates a token request to dimensions.ai using account and password.
 }
 \examples{
 
+# Obtain a token by username and password
 \dontrun{
 token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+}
+
+# Obtain a token by API Key
+
+\dontrun{
+token <- dsAuth(key = "myapikey")
 }
 
 }

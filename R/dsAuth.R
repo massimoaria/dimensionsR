@@ -4,6 +4,7 @@
 #'
 #' @param username is a character. 
 #' @param password is a character.
+#' @param key is a character.
 #' @param auth_endpoint is a character. It contains the authentication endpoint url of Dimensions. Default is auth_endpoint = "https://app.dimensions.ai/api/auth.json"
 #' @param verbose is logical.
 #'
@@ -15,8 +16,15 @@
 #'
 #' @examples
 #'
+#' # Obtain a token by username and password
 #' \dontrun{
 #' token <- dsAuth(username = "my.email@my.domain", password = "mypassword")
+#' }
+#' 
+#' # Obtain a token by API Key
+#' 
+#' \dontrun{
+#' token <- dsAuth(key = "myapikey")
 #' }
 #'
 #' @seealso \code{\link{dsApiRequest}}
@@ -27,12 +35,20 @@
 #' @import httr
 #' @import jsonlite
 
-dsAuth <- function(username, password, auth_endpoint = "https://app.dimensions.ai/api/auth.json", verbose=FALSE) {
+dsAuth <- function(username=NULL, password=NULL, key=NULL, auth_endpoint = "https://app.dimensions.ai/api/auth.json", verbose=FALSE) {
 
-  login <-
-    list(username = username,
+  if (!is.null(key)){
+    login <- list(key = key,
+                  submit = "Login!")
+  } else if (!is.null(username)){  
+    login <-
+      list(username = username,
          password = password,
          submit = "Login!")
+  } else {
+    print("you have to set a valid api key or username/password to obtain a token!")
+    return()
+  }
 
   if (isTRUE(verbose)) {
     r <-
