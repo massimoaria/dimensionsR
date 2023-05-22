@@ -127,7 +127,8 @@ Please, choose an item from the following set:
   if (nchar(output_fields[1])<1) output_fields <- "all"
   if (item == "publications") {item_type <- "type + "}else{item_type <- ""}
   return_fields <- paste0("[",item_type, paste0(output_fields, collapse = " + "),"]")
-  return_item = paste0(item, return_fields)
+  #return_item = paste0(item, return_fields)
+  return_item = item
 
   #step_query <- ' limit 1000 skip 0'
   

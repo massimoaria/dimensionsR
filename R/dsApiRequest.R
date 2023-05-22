@@ -87,7 +87,9 @@ dsApiRequest <- function(token, endpoint = "https://app.dimensions.ai/api/dsl.js
 
     DD <-
       fromJSON(content(d, "text", encoding = "UTF-8"), simplifyVector = FALSE)
-    item <- strsplit(query," ")[[1]][2]
+    item <- unlist(strsplit(query," "))
+    item <- item[nchar(item)>0]
+    item <- item[2]
     n <- n + length(DD[[item]])
     D <- c(D, DD[[item]])
 
