@@ -32,7 +32,7 @@ Default value is \code{item = "publications"}.}
 
 \item{categories}{is a character vector. It indicates the research categories to include in the search. If empty \code{categories = ""}, all categories will be included in the search.}
 
-\item{output_fields}{is a character. It contains fields which have to exported. Default is "basics + extras + categories + abstract".}
+\item{output_fields}{is a character. It contains fields which have to exported. Default is c("basics","extras","categories","abstract").}
 
 \item{start_year}{is integer. It indicate the starting publication year of the search timespan.}
 

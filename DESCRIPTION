@@ -1,12 +1,17 @@
 Package: dimensionsR
 Title: Gathering Bibliographic Records from 'Digital Science Dimensions' Using 'DSL' API
-Version: 0.0.3
-Authors@R: 
+Version: 0.0.4
+Authors@R: c(
     person(given = "Massimo",
            family = "Aria",
-           role = c("aut", "cre"),
+           role = c("cre", "aut", "cph"),
            email = "massimo.aria@gmail.com",
-           comment = c(ORCID = "0000-0002-8517-9411"))
+           comment = c(ORCID = "0000-0002-8517-9411")),
+           person(given = "Corrado", 
+           family = "Cuccurullo", 
+           role = "aut",
+           email = "cuccurullocorrado@gmail.com",
+           comment = c(ORCID = "0000-0002-7401-8575")))
 Description: A set of tools to extract bibliographic content from 'Digital Science Dimensions' using 'DSL' API <https://www.dimensions.ai/dimensions-apis/>.
 License: GPL-3 
 URL: https://github.com/massimoaria/dimensionsR

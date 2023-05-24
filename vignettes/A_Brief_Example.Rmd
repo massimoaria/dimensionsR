@@ -142,9 +142,7 @@ To write that query, we should set the function arguments as following:
 
 - *and finally, export the following fields*
 
-    **output_fields = c("basics", "extras", "authors", "concepts")**
-    
-    (you could also export all database fields setting output_fields = "all")
+    **output_fields = "basics + extras + categories + abstract"**
 
 Passing all these arguments to the function ***dsQueryBuild***, we obtain the final query:
 
@@ -154,11 +152,11 @@ Passing all these arguments to the function ***dsQueryBuild***, we obtain the fi
                       type = "article", 
                       categories = "management", 
                       start_year = 1980, end_year = 2020,
-                      output_fields = c("basics", "extras", "authors", "concepts"))
+                      output_fields = "basics + extras + categories + abstract")
                       
     query
     
-    # "search publications in title_abstract_only  for \"\\\"bibliometric*\\\"\" where year in [ 1980 : 2020 ] and type in [ \"article\" ] and (category_for.name ~\"management\") return publications[type + basics + extras + authors + concepts]"
+    # "search publications in title_abstract_only  for \"\\\"bibliometric*\\\"\" where year in [ 1980 : 2020 ] and type in [ \"article\" ] and (category_for.name ~\"management\") return publications[ basics + extras + authors + concepts]"
 
 A complete list of output items is available at https://docs.dimensions.ai/dsl/data-sources.html
 &nbsp; 

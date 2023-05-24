@@ -11,7 +11,7 @@
 #' @param categories is a character vector. It indicates the research categories to include in the search. If empty \code{categories = ""}, all categories will be included in the search.
 #' @param start_year is integer. It indicate the starting publication year of the search timespan.
 #' @param end_year is integer. It indicate the ending publication year of the search timespan.
-#' @param output_fields is a character. It contains fields which have to exported. Default is "basics + extras + categories + abstract".
+#' @param output_fields is a character. It contains fields which have to exported. Default is c("basics","extras","categories","abstract").
 #'
 #' @return a character containing the query in DSL format.
 #'
@@ -124,9 +124,9 @@ Please, choose an item from the following set:
     filter_type <- paste('type in [', a, ']')
   } 
 
-  if (nchar(output_fields[1])<1) output_fields <- "all"
+  if (nchar(output_fields[1])<1) output_fields <- "basics + extras + authors + concepts"
   if (item == "publications") {item_type <- "type + "}else{item_type <- ""}
-  #return_fields <- paste0("[",item_type, paste0(output_fields, collapse = " + "),"]")
+  if (length(output_fields)>1) {output_fields <- paste(output_fields, collapse = " + ")}
   #return_item = paste0(item, return_fields)
   return_item = paste0(item," [ ", output_fields, " ]")
 
