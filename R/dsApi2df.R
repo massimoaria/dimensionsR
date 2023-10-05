@@ -207,7 +207,8 @@ pub2df <- function(P, format){
       df$OI[i] <- paste(a[OI_orcid_ind],collapse=";")
       
       ## Open Access
-      df$OA[i] <- paste0(a["open_access1"],";",a["open_access2"])
+      oa_values <- c(a["open_access"], a["open_access1"], a["open_access2"])[!is.na(c(a["open_access"], a["open_access1"], a["open_access2"]))]
+      df$OA[i] <- paste0(oa_values, collapse=";")
       
     }
   }
