@@ -64,7 +64,7 @@ altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
 
   row.names(data) <- NULL
 
-  close(pb)
+  #close(pb)
   
   return(data)
 }
