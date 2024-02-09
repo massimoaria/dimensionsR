@@ -1,6 +1,6 @@
 Package: dimensionsR
 Title: Gathering Bibliographic Records from 'Digital Science Dimensions' Using 'DSL' API
-Version: 0.0.4
+Version: 0.0.3
 Authors@R: c(
     person(given = "Massimo",
            family = "Aria",

@@ -28,9 +28,9 @@ altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
   data <- data.frame(rbind(rep(NA,length(label))))
   names(data)=label
   start <- 0
-  pb <- utils::txtProgressBar(min = 1, max = length(doi)+1, initial = 1, char = "=")
+  pb <- oa_progress(length(doi), "Altmetric downloading")
   for (i in 1:length(doi)){
-    utils::setTxtProgressBar(pb, i)
+    pb$tick()
     
     url <- paste("https://api.altmetric.com/v1/doi/",doi[i],sep="")
     d <- httr::GET(url)
@@ -62,4 +62,11 @@ altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
   close(pb)
   
   return(data)
+}
+
+oa_progress <- function(n, text = "converting") {
+  progress::progress_bar$new(
+    format = paste(" ", text, "[:bar] :percent eta: :eta"),
+    total = n, clear = FALSE, width = 60
+  )
 }
