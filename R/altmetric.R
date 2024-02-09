@@ -24,10 +24,13 @@
 #'
 altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
   
+  doi <- doi[!is.na(doi)]
   label <- c("doi", "title")
   data <- data.frame(rbind(rep(NA,length(label))))
   names(data)=label
+  r <- 0
   start <- 0
+  df <- list()
   pb <- oa_progress(length(doi), "Altmetric downloading")
   for (i in 1:length(doi)){
     pb$tick()
@@ -35,29 +38,33 @@ altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
     url <- paste("https://api.altmetric.com/v1/doi/",doi[i],sep="")
     d <- httr::GET(url)
     if (d$status_code==200){
+      r <- r+1
       ## download altmetric metadata for a doi
       DD <- unlist(jsonlite::fromJSON(httr::content(d, "text", encoding = "UTF-8"), simplifyDataFrame = T))
+      df[[r]] <- data.frame(rbind(DD),stringsAsFactors = F)
       
-      ## save metadata in a data frame
-      missItems <- unique(c(setdiff(label,names(DD)),setdiff(names(DD),label)))
-      data[missItems]=NA
-      lab <- names(DD)
-      #items <- intersect(items,names(DD))
-      #data <- data[items]
-      data[i,lab] <- data.frame(rbind(DD[lab]),stringsAsFactors = F)
-      label <- names(data)
       
-    }else{
-      #alt$score[i] <- NA
-      data[i,] <- NA
+      # ## save metadata in a data frame
+      # missItems <- setdiff(names(DD),label)
+      # print(missItems)
+      # data[missItems]=NA
+      # lab <- names(DD)
+      # #items <- intersect(items,names(DD))
+      # ##data <- data[items]
+      # data[i,lab] <- data.frame(rbind(DD[lab]),stringsAsFactors = F)
+      # label <- names(data)
     }
     
   }
-  data["doi"] <- doi
-  data$score <- as.numeric(data$score)
-  #row.names(data) <- doi
+  data <- bind_rows(df) 
+  data <- data %>% select(order(colnames(data))) %>% 
+    select("doi","title", everything())
+  
+  # data["doi"] <- doi
+  # data$score <- as.numeric(data$score)
+  # #row.names(data) <- doi
   row.names(data) <- NULL
-  data <- data[sort(names(data))]
+  #data <- data[sort(names(data))]
   
   close(pb)
   
