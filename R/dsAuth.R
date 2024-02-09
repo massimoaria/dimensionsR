@@ -32,8 +32,10 @@
 #' @seealso \code{\link{dsApi2df}}
 #'
 #' @export
+#' @import dplyr
 #' @import httr
 #' @import jsonlite
+#' @import progress
 
 dsAuth <- function(username=NULL, password=NULL, key=NULL, auth_endpoint = "https://app.dimensions.ai/api/auth.json", verbose=FALSE) {
 

@@ -59,8 +59,8 @@ altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
   data <- bind_rows(df) 
   data <- data %>% select(order(colnames(data))) %>% 
     select("doi","title", "score", everything()) %>% 
-    mutate(score = as.numeric(score)) %>% 
-    rename(altmetric_score = score)
+    mutate(score = as.numeric(.data$score)) %>% 
+    rename(altmetric_score = .data$score)
 
   row.names(data) <- NULL
 
