@@ -37,15 +37,15 @@ altmetric <- function(doi = "10.1016/j.joi.2017.08.007"){
     if (d$status_code==200){
       ## download altmetric metadata for a doi
       DD <- unlist(jsonlite::fromJSON(httr::content(d, "text", encoding = "UTF-8"), simplifyDataFrame = T))
-     
+      
       ## save metadata in a data frame
-        missItems <- unique(c(setdiff(label,names(DD)),setdiff(names(DD),label)))
-        data[missItems]=NA
-        lab <- names(DD)
-        #items <- intersect(items,names(DD))
-        #data <- data[items]
-        data[i,lab] <- data.frame(rbind(DD[lab]),stringsAsFactors = F)
-        label <- names(data)
+      missItems <- unique(c(setdiff(label,names(DD)),setdiff(names(DD),label)))
+      data[missItems]=NA
+      lab <- names(DD)
+      #items <- intersect(items,names(DD))
+      #data <- data[items]
+      data[i,lab] <- data.frame(rbind(DD[lab]),stringsAsFactors = F)
+      label <- names(data)
       
     }else{
       #alt$score[i] <- NA
